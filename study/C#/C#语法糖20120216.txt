@@ -1,0 +1,42 @@
+C#语法糖汇总：
+1.简化过的Property
+	声明Property的方法可以这样，public string MyName{get;set;} 我们也可以单独给get或set设定访问限制符。
+2.经过两次变异的委托写法：
+	复习Lambda表达式、委托和匿名委托
+3.集合类的声明：
+	List<string> list=new List<string>{"ddd","ccc"};
+4.集合类各个项的操作：
+	对于上面的声明下面提供简单的打印方法：
+	list.ForEach(a=>Console.WriteLine(a)); //就可以把list中所有的数据打印出来。 
+5.using == try finally
+	使用完毕时释放资源，使用using ,using 实质就是try finnaly的一个语法糖而已。
+	例如：
+		StreamWriter sw=null;
+		try
+		{
+			sw=new StreamWriter("D:\**.txt");
+			sw.WriteLine("test");
+		}
+		finally
+		{
+			if(sw!=null)
+			sw.Dispose();
+		}
+	上面这段代码简化使用using化简：
+	using (var sw = new StreamWriter("D:\**.txt"))
+	{
+		sw.WriteLine("test");
+	}
+6.可爱的var
+var，编译器会根据后面对var的赋值判断它的类型，var的类型一旦确认就不能改变，他只能作为局部变量使用，不能为字段和参数声明。
+7.问号的演变：
+?:这是一个三元表达式。
+两个问号??，表示左边的变量如果为null则值为右边的变量，否则就是左边变量值。
+8.类型实例化的语法糖：
+
+9.传说中的扩展方法：
+可以在不修改源代码的情况下给类增加实例方法。
+10.使用匿名类
+
+
+

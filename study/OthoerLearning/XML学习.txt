@@ -1,0 +1,6 @@
+XmlElement和XmlNode区别：
+	XmlElement是XmlNode的子集，XmlNode表示一个节点，包括了XmlElement(元素)和XmlAttribute(属性)等
+	
+	只有XmlElement这个类才能创建节点  XmlElement xe = xmlDoc.CreateElement("book");  //创建名字为<book></book>节点
+	GetAttribute()和SetAttribute()方法只有把节点转换成为XmlElement类型才能完成调用
+	每一次对XML文件进行了操作，最后都得吧这个*.xml进行保存调用Save函数

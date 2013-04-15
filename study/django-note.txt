@@ -1,0 +1,9 @@
+Django-learning:
+
+1. 
+cd workspace
+django-admin.py startproject mysite
+cd workspace/mysite
+python manage.py runserver 
+
+2. modify your urls.py/views.py/models.py

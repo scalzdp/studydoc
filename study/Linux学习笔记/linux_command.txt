@@ -1,0 +1,1461 @@
+Ubuntu常用命令：
+
+
+basic cmd:
+   C-p  -- previous cmd
+   C-n  -- next cmd
+   C-j  -- execute cmd
+   C-h  -- froward delete one char   
+   C-d  -- back delete one char
+   C-u  -- delete all before cursor 
+   C-k  -- delete all after cursor
+   C-x  -- 在光标所在两个位置交換
+   C-w  -- 剪切光标前的一个单词，	
+   C-r  -- 搜索历史命令
+   C-y  -- 复制
+
+vi set:
+/etc/vim/vimrc
+在home目录自建文件.vimrc 
+
+vi cmd:
+   ============== moving cursor ==============
+   h   left one character
+   l or <Space>        right one character
+   k   up one line
+   j or <Enter>        down one line
+   b   left one word
+   w   right one word
+   (   start of sentence
+   )   end of sentence
+   {   start of paragraph
+   }   end of paragraph
+   1G  top of file
+   nG  line n
+   G   end of file
+   <Ctrl>W     first character of insertion
+   <Ctrl>U     up half of screen
+   <Ctrl>D     down half of screen   
+   <Ctrl>B     up one screen
+   <Ctrl>F     down one screen
+
+   ================ Saving files and quitting vi ================
+   :e  file    edit file (save current file with :w first)
+   :w          save (write out) the file being edited
+   :w  file    save as file
+   :w! file    save as an existing file
+   :q          quit vi
+   :wq             save the file and quit vi
+   :x          save the file if it has changed and quit vi  == :wq
+   :q!             quit vi without saving changes
+
+   ================ Inserting text================
+   a   after the cursor
+   i   before the cursor
+   A   after last character on the line
+   I   before first character on the line
+   o   open line below current line
+   O   open line above current line
+
+   =============== Deleting text ================
+   x       character after cursor
+   X       character before cursor
+   12x         12 characters
+
+   dw      word
+   3dw     three words
+   d0      to beginning of line
+   d$      to end of line
+   dd      current line
+   5dd         five lines
+   d{      to beginning of paragraph
+   d}      to end of paragraph
+   :1,. d      to beginning of file
+   :.,$ d      to end of file
+   :1,$ d      whole file
+
+   U       undo
+   .       repeat last action
+   C-R     还原被撤消的编辑操作
+
+   ========= search
+    /pattern         ：从光标开始处向文件尾搜索pattern 
+    ?pattern         ：从光标开始处向文件头搜索pattern 
+    n               ：在同一方向重复上一次搜索命令 
+    N               ：在反方向上重复上一次搜索命令 
+    :g/p1/s//p2/g    ：将文件中所有p1均用p2替换
+
+Y       --copy one line
+2Y      --copy 2 lines  
+10Y     --copy 10 lines
+yG      --copy all lines
+
+P       --paste the text contained in the buffer above current cursor position
+p       --paste the text contained in the buffer below
+
+设置自动缩进indent, 设置空格
+set ts=4
+set expandtab
+set autoindent
+syntax on ---语法高亮
+
+:h  cmd               --help
+
+:1,20s/^/#/g        ---line 1-20替换行首为字符＃
+:map 快捷键 执行命令   --快捷键映射
+:r !date  －－导入到当前编辑文件
+:ab mail helen@vip.163.com  －－－insert model, 任何地方输入mail都将替换成后面的email地址
+
+:buffers              # 列出所有的当前窗口
+:bd                 #close buffer
+:args  显示当前编辑文件
+:ls  --look buffer number
+:b 1    ---切换到缓冲区1（或:bu 1）
+
+buffer 状态：
+- 非活动的缓冲区（Inactive Buffer）
+h 隐藏的缓冲区（Buffer is hidden)
+% 当前的缓冲区（current buffer)
+# 交换缓冲区 （Alternate buffer)
++ 文件已经被修改
+
+dir operation:
+<F1>        显示帮助
+<cr>        如果光标下为目录，则进入该目录；如果光标下是文件，则用VIM打开该文件
+-           返回上级目录
+c           切换VIM的当前工作目录为正在浏览的目录
+d           创建目录
+D           删除文件或目录
+i           切换显示方式
+R           改名文件或目录
+s           选择排序方式
+x           定制浏览方式，使用你指定的程序打开该文件
+
+在不同缓冲区之间切换使用 CTRL+^ ，当然也可以使用 左右方向键（不推荐）。
+
+* 在新窗口里面打开 某个特点的缓冲区使用 :sbuffer num/file 命令。
+* 转到下一个缓冲区使用 :bnext       -----注：以下:b后均无空格
+* 转到上一个缓冲区使用 :bpre
+* 转到最后一个缓冲区使用 :blast
+* 转到第一个缓冲区使用 :bfirst
+* 删除一个缓冲区使用 :bdele
+* 卸载一个缓冲区使用 :bunload
+
+如何切换焦点？
+
+Ctrl + w, w 后一个     --重复按这一个也可
+Ctrl + w, p 前一个   
+
+Ctrl + w, h 四个方向
+Ctrl + w, i
+Ctrl + w, k
+Ctrl + w, l
+
+Ctrl+w, o 关闭其他窗口?
+Ctrl+W q  关闭当前窗口，如果只剩最后一个了，则退出Vim。
+
+<================================================================================>
+
+sudo apt－get install 软件名 安装软件命令
+sudo nautilus 打开文件（有root权限）
+su root 切换到“root”
+
+ls -a 列出当前目录文件（包括隐含文件）
+ls -l 列出当前目录下文件的详细信息
+
+cd .. 回当前目录的上一级目录
+cd - 回上一次所在的目录
+cd ~ 或 cd 回当前用户的宿主目录
+mkdir 目录名 创建一个目录
+rmdir 空目录名 删除一个空目录
+rm 文件名 文件名 删除一个文件或多个文件
+rm -rf 非空目录名 删除一个非空目录下的一切
+mv 路经/文件 /经/文件 移动相对路经下的文件到绝对路经下
+mv name newName  --在当前目录下改名
+    mv file1 file2 -t dir  --移动多个文件（或目录）到dir目录
+find 路经 -name “字符串” 查找路经所在范围内满足字符串匹配的文件和目录
+
+fdisk fdisk -l 查看系统分区信息
+fdisk fdisk /dev/sdb 为一块新的SCSI硬盘进行分区
+chown root /home 把/home的属主改成root用户
+chgrp root /home 把/home的属组改成root组
+
+Useradd 创建一个新的用户
+adduser (8)          - add a user or group to the system
+
+Groupadd 组名 创建一个新的组
+Passwd 用户名 为用户创建密码
+Passwd -d用户名 删除用户密码也能登陆
+Passwd -S用户名 查询账号密码
+Usermod -l 新用户名 老用户名     －－为用户改名
+Userdel -r 用户名 删除用户一切
+groups  user  -- 显示指定用户所属的组，若未指定用户则显示当前用户所属组
+id [选项] [用户名称]    用于显示用户当前UID，gid以及所属群组的组列表
+
+踢除登录用户：
+w     －－查看当前登录用户
+pkill -kill -t pts/0    －－将pts/0强制踢出
+pkill -kill -t tty1     －－将tty1强制踢出
+
+tar -c 创建包 –x 释放包 -v 显示命令过程 –z 代表压缩包
+tar –cvf benet.tar /home/benet 把/home/benet目录打包
+tar –zcvf benet.tar.gz /mnt 把目录打包并压缩
+tar –zxvf benet.tar.gz 压缩包的文件解压恢复
+tar –jxvf benet.tar.bz2 解压缩
+ 
+make 编译
+make install 安装编译好的源码包
+reboot Init 6 重启LINUX系统
+
+Halt Init 0 Shutdown –h now 关闭LINUX系统
+uname -a 查看内核版本
+cat /etc/issue 查看ubuntu版本
+lsusb 查看usb设备
+sudo ethtool eth0 查看网卡状态
+cat /proc/cpuinfo 查看cpu信息
+lshw 查看当前硬件信息
+sudo fdisk -l 查看磁盘信息
+df -h 查看硬盘剩余空间
+free -m 查看当前的内存使用情况
+ps -A 查看当前有哪些进程
+kill 进程号(就是ps -A中的第一列的数字)或者 killall 进程名( 杀死一个进程)
+kill -9 进程号 强制杀死一个进程
+ 
+常用apt命令：
+apt-cache search package 搜索包
+apt-cache show package 获取包的相关信息，如说明、大小、版本等
+sudo apt-get install package 安装包
+sudo apt-get install package - - reinstall 重新安装包
+sudo apt-get -f install 修复安装”-f = –fix-missing”
+sudo apt-get remove package 删除包
+sudo apt-get remove package - - purge 删除包，包括删除配置文件等
+sudo apt-get update 更新和同步服务器软件包列表
+sudo apt-get upgrade 更新已安装的包
+sudo apt-get dist-upgrade 升级系统
+sudo apt-get dselect-upgrade 使用 dselect 升级
+apt-cache depends package 了解使用依赖
+apt-cache rdepends package 是查看该包被哪些包依赖
+sudo apt-get build-dep package 安装相关的编译环境
+apt-get source package 下载该包的源代码
+sudo apt-get clean && sudo apt-get autoclean 清理无用的包
+sudo apt-get check 检查是否有损坏的依赖
+
+sudo apt-get -f install  ---可以查找所需要的依赖包
+
+清理所有软件缓存（即缓存在/var/cache/apt/archives目录里的deb包 ）
+sudo apt-get clean
+
+删除系统不再使用的孤立软件
+sudo apt-get autoremove
+
+文件管理 # ls ls -a 列出当前目录下的所有文件，包括以.头的隐含文件
+文件管理 # ls ls -l或ll 列出当前目录下文件的详细信息
+文件管理 # pwd pwd 查看当前所在目录的绝对路经
+文件管理 # cd cd .. 回当前目录的上一级目录
+文件管理 # cd cd - 回上一次所在的目录
+文件管理 # cd cd ~ 或 cd 回当前用户的宿主目录
+文件管理 # cd cd ~用户名 回指定用户的宿主目录
+
+文件管理 # mkdir mkdir 目录名 创建一个目录
+文件管理 # mkdir mkdir –p 递归式去创建一些嵌套目录
+文件管理 # rmdir Rmdir 空目录名 删除一个空目录
+
+文件管理 # rm rm 文件名 文件名 删除一个文件或多个文件
+文件管理 # rm rm -rf 非空目录名 递归删除一个非空目录下的一切，不让提式-f
+
+文件管理 # cat cat文件名 一屏查看文件内容
+文件管理 # more more文件名 分页查看文件内容
+文件管理 # less less 文件名 可控分页查看文件内容
+
+文件管理 # grep grep字符 文件名 根据字符匹配来查看文件部分内容
+
+文件管理 # mv mv 路经/文件 /经/文件 移动相对路经下的文件到绝对路经下
+文件管理 # mv mv 文件名 新名称
+
+mount windows分区到Ubuntu过程：
+以下若为可自动识别的文件系统类型（Linux可猜测出），则参数-t可省略
+    sudo fdisk -l
+    sudo mount -t type device dir   ---t vfstype, is used to indicate the file sys‐
+                  tem type.
+   如  mkdir /media/E; sudo mount /dev/sda6 /media/E
+    
+sudo umount /media/E
+
+解决mount乱码问题：
+mount -f vfat -o iocharset=utf8 /dev/sdb6 /mnt/sda
+    --vfat为FAT32文件系统类型
+
+
+top   --显示进程信息
+
+文件管理 # grep grep字符 文件名 根据字符匹配来查看文件部分内容
+
+grep -e "pattern" *.html
+    * 找到当前目录下面所有以.html结尾的文件中含有"pattern"的行，并显示它们。 
+grep -l  "String" ./Work/*/*.java --list just the names of matching files
+grep -rH 'hello' *.c 
+        --   Here the `-r' is probably
+     unnecessary, as recursion occurs only in the unlikely event that
+     one of `.c' files is a directory
+     
+grep -lrH --include='*.java' 'String' ./Work/     
+    --在整个Work目录及其子目录下查找所有含有'String'串的.java文件
+    -- -l 仅列出文件, 无-l 列出文件及所查找到的行，有。
+    -- -r为迭归查找子目录, 
+    -- -H: Print the file name for each match.  This is the default when
+           there is more than one file to search
+    -- --include=GLOB: Search only files whose base name matches GLOB (using wildcard
+        matching as described under `--exclude'). 
+    --exclude=GLOB'
+        Skip files whose base name matches GLOB (using wildcard matching).
+        A file-name glob can use `*', `?', and `['...`]' as wildcards, and
+        `\' to quote a wildcard or backslash character literally.
+    
+如何kill掉进程名包含某个字符串的一批进程:
+kill -9 $(ps -ef|grep 进程名关键字|gawk '$0 !~/grep/ {print $2}' |tr -s '\n' ' ')
+
+in ubuntu, the gawk will be replaced with awk:
+
+
+
+观测进程名包含某个字符串的进程详细信息:
+top -c -p $(ps -ef|grep 进程名关键字|gawk '$0 !~/grep/ {print $2}' |tr -s '\n' ','|sed 's/,$/\n/')
+   
+   
+kill -9 $(ps -ef|grep java|grep 'dev-jboss-csc'|gawk '$0 !~/grep/ {print $2}' |tr -s '\n' ' ')
+
+bzip2 foo
+    * 将文件foo.bz2解压缩生成foo。 
+    
+file  --show file properties
+whatis cmd  --  one line help information about cmd
+free  --show mem info
+date  --sys date    
+chmod -x file1  -- file1被授与不可执行，减权限命令。
+sudo su  --switch to root 
+su jun   --switch back to jun
+    
+关机命令：
+    shutdown -h now --现在立即关机(一般用此命令)
+    halt
+    poweroff
+
+3）shutdown -r now 现在立即重启
+
+4）shutdown -r +3 三分钟后重启
+
+5）shutdown -h +3  提示使用者将在三分钟后关机
+
+6）shutdown -r 20:23 --在20：23时将重启计算机
+
+7）shutdown -r 20:23 &  --可以将在20：23时重启的任务放到后台去，用户可以继续操作终端
+
+   -h 为关机选项
+   -r 为重启选项
+   
+poweroff，halt： 为与传统System V保持兼容而采用的命令   
+
+8) gnome-session-save --kill --silent   //log out current session
+
+
+info info 阅读摘记：
+
+    Backspace ＋ 退格键 使用
+    在info文档里直接按s，搜索整个info文档查找指定string，要继续搜索，只需要再按s并回车
+
+    Emacs里，连续C－s（或C－r）跳到下一个搜索到的目标
+
+    M-x index-apropos  查找某一个命令（不确定时）
+     
+    info grep 出来结果中，C－s 与 s有何区别？
+    
+  Ctrl+M 对编辑窗口（或View）最大化或恢复
+
+  tar -xvvf foo.tar
+              extract foo.tar
+
+       tar -xvvzf foo.tar.gz
+              extract gzipped foo.tar.gz
+    
+ svn checkout http://svn.apache.org/repos/asf/hadoop/hdfs/trunk hadoop/hdfs-trunk  （后面为本地目录）
+ 
+ 安装Deb包：  sudo dpkg -i package.deb    
+    
+
+安装WineHQ：  
+    First, open a terminal window (Applications->Accessories->Terminal). Then add 
+    the repository's key to your system's list of     trusted APT keys by copy and pasting the following into your terminal:
+
+    wget -q http://wine.budgetdedicated.com/apt/387EE263.gpg -O- | sudo apt-key add -
+
+    Next, add the repository to your system's list of APT sources:
+
+    For Ubuntu Jaunty (9.04):
+    sudo wget http://wine.budgetdedicated.com/apt/sources.list.d/jaunty.list -O /etc/apt/sources.list.d/winehq.list
+
+    For Ubuntu Intrepid (8.10):
+    sudo wget http://wine.budgetdedicated.com/apt/sources.list.d/intrepid.list -O /etc/apt/sources.list.d/winehq.list
+
+    For Ubuntu Hardy (8.04):
+    sudo wget http://wine.budgetdedicated.com/apt/sources.list.d/hardy.list -O /etc/apt/sources.list.d/winehq.list
+
+    Then update APT's package information by running 'sudo apt-get update'. 
+    You can now install Wine normally or by typing 'sudo apt-get install wine' into the terminal.    
+     
+Ubuntu启动时自动运行程序，steps:
+    * Go to System > Preferences > Sessions (or Startup Applications)
+    * Select the "Startup Programs" tab
+    * Click add
+    * Enter a name to call the application (any name will do)
+    * In the "Startup command box," enter the command
+    * Click OK (You should see your new command)
+    * Click Close 
+
+Wine使用：
+    Wine is not designed to interact with an existing Windows installation.
+
+    WARNING: Do not try to configure Wine to point to your actual Windows C:\ drive. 
+    This will break Windows and require a reinstall. We have tried to make this hard to do so you probably cannot do it by accident. If you do manage this, Wine may or may not continue to operate, but your Windows install will be 100% dead due to critical parts of it being overwritten. The only way to fix Windows after this has happened is to reinstall it.     
+
+   run an exe installer :
+      1.Double-click on the installer, just like in Windows!                 
+      2.You can also right click on it, choose "Run with", and pick wine. 
+      3. cd ~/Desktop    // Setup.exe is into here
+         wine Setup.exe
+
+    If the installer's name doesn't end in .exe, you have to :
+        cd ~/Desktop
+        wine start Setup.msi    
+    
+uninstall Windows applications?
+
+Wine has its own built-in uninstaller - the equivalent of Windows' "Add/Remove Programs" function for running standardized uninstallers. In recent versions, a shortcut has been added to Wine's menu, along with a shortcut to winecfg.
+
+Note that Wine does not fully implement everything required to cleanly uninstall all applications. Some uninstallers might not function at all. To remove all programs installed under Wine, remove the ~/.wine directory:
+
+rm -rf $HOME/.wine
+
+Also the uninstaller does not remove menu and desktop entries. To remove all Wine-created menu entries run the following commands
+
+rm -f $HOME/.config/menus/applications-merged/wine*
+rm -rf $HOME/.local/share/applications/wine
+rm -f $HOME/.local/share/desktop-directories/wine*
+rm -f $HOME/.local/share/icons/????_*.xpm
+    
+ 例1：将压缩文件text.zip在当前目录下解压缩。
+
+　　$ unzip text.zip
+     unzip -l hssvm1.18-4.zip  --列出包中内容
+    unzip -t shell_learn.zip   --测试包数据是否正确
+    
+    unzip data1 -x joe   => extract all files except joe from zipfile data1.zip
+    unzip -fo foo ReadMe => quietly replace existing ReadMe if archive file newer
+
+
+
+　　例2：将压缩文件text.zip在指定目录/tmp下解压缩，如果已有相同的文件存在，要求unzip命令不覆盖原先的文件。
+
+　　$ unzip -n text.zip -d /tmp   
+
+   zip :
+  $ zip -r hssvm1.18-2.zip hssvm1.18-2     -- -r option is used for including all files in directory
+    
+    file-roller : 
+        this is very useful tool like zip or tar.
+        Usage:  file-roller package             --view a package file
+                file-roller -d shell_learn/     --create a package using dir
+                file-roller -a test.zip hello   --add file hello to test.zip package
+                fl -h test.zip                  --extract zip to here
+                fl -e ../ test.zip              -- extract zip to the specified folder
+
+    
+which 只能寻找执行文件 ，并在PATH变量里面寻找。
+whereis 从linux文件数据库（/var/lib/slocate/slocate.db）寻找，所以有可能找到刚刚删除，或者没有发现新建的文件。
+
+locate 同上,不过文件名是部分匹配。
+
+find 是直接在硬盘上搜寻，功能强大，但耗硬盘，一般不要用。
+    
+    
+GDB:
+
+ 二，正式步骤：
+ 1. 打开SHELL，进入测试文件(hello.swf)所在目录
+ 2. 打开gdb（在SHELL中键入gdb)
+ 3. 指定调试的程序（在gdb中，键入file gtk-gnash）
+ 4. 指定程序打开的文件（在gdb中，键入set args hello.swf）
+ 接下来就可以设置断点，运行程序了。
+
+ 5. break main (在main处设置断点)
+ 6. run （运行程序）
+ 7. break gnash::Player::run （指定断点，gnash为名字空间，Player为类名，run为方法名）
+ 8. continue (继续运行）
+ 9. 返回到步骤7，设置断点
+
+ 单步调试： step 和 next 的区别
+ 10. step可以走入到一个函数
+ 11. next将会走过找个函数
+ 比如 main(void) {
+             hello();
+             i++;
+ }
+ 当前，断点停在hello()语句前。
+ 运行step，将会走入hello()函数内
+ 运行next，将会走过hello()函数，停在i++语句。
+ 
+ 使用gdb（在emacs中）:
+    打开emacs: >emacs
+    之后Alt + x
+    输入gdb
+
+
+    在console中输入了emacs &后 进入emacs
+     再执行ALT+X
+    然后输入GDB 后命令行（最下面有提示）
+    不要删除前面的  --annotate=3这个参数  否则不会自动在下面显示代码
+    
+    
+    cp的使用： 
+        cp  -r  dir1    dir2  -- -r 
+          -t DIRECTORY'
+    `--target-directory=DIRECTORY'
+     Specify the destination DIRECTORY.  *Note Target directory::.
+
+    
+    ？? grep  find 的反置用法    ：  rm -rf !(java)   －－删除当前目录下除java目录外的其他所有文件及目录
+    rm *[!6].bak   --删除目录下所有"非6.bak结尾"的文件
+    rm *[!4]?.*    --删除所有"除了点号前倒数第二个字符为'4' "的文件,即点号前第2个字符为4的文件不删除
+    ls [13]*       --列出所有1 或 3开头的文件
+    ls 13*         --列出所有以13开头的文件 ，注意与上者的不同
+    ls *[3-8]?.*   --列出所有点号前倒数第2个字符落在'3'到'8'范围的文件
+    
+    rm !(shell||test||while_loop)   ---删除目录下的除shell,test,while_loop以外的其他所有文件。        
+
+
+unrar用法：
+    
+    unrar x hssvm1.01.rar ../Work/
+
+    解压：rar x FileName.rar
+    压缩：rar a FileName.rar DirName
+     ie: hssvm$ rar a hssvm1.18-1.rar hssvm1.18-1/*
+
+Ubuntu更新源：
+	1.备份源：sudo cp /etc/apt/sources.list /etc/apt/sources.list_backup
+	2.编辑：sudo gedit /etc/apt/sources.list
+	3.选择源：  ...
+	
+Automaticly install jdk:
+    find recent jdk: apt-cache search jdk
+	
+    apt-get install sun-java6-jdk sun-java6-jre
+	
+Java环境配置：	
+	
+    环境变量配置
+
+    编辑环境文件 /etc/environment
+    sudo gedit /etc/environment（最好先备份一下）
+    并在其中添加
+        CLASSPATH=.:/usr/lib/jvm/java-1.5.0-sun/lib
+        JAVA_HOME=/usr/lib/jvm/java-1.5.0-sun	
+    
+    手动安装JDK：
+      $ sudo chmod u+x jdk-6u12-linux-i586.bin --u:user  x: execute
+      
+      修改所有用户的环境变量
+        $ sudo gedit /etc/profile
+        在文件最后添加:
+            #set java environment
+            JAVA_HOME=/home/liangshihong/jdk1.6.0_12
+            export JRE_HOME=/home/liangshihong/jdk1.6.0_12/jre
+            export CLASSPATH=.:$JAVA_HOME/lib:$JRE_HOME/lib:$CLASSPATH
+            export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
+            重新启动计算机，用命令测试jdk的版本 
+    
+  (Note: /etc/environment是设置整个系统的环境，而/etc/profile是设置所有用户的环境，前者与登录用户无关，后者与登录用户有关)  
+  
+  To list installed JVMs:
+    update-java-alternatives -l
+  
+  Selecting the default Java version:
+      sudo update-java-alternatives -s jva-1.5.0-sun
+      
+
+Set JAVA_HOME / PATH for single user
+
+    Login to your account and open ~/.bashrc file
+    export JAVA_HOME=/usr/java/jdk1.5.0_07/bin/java
+    export PATH=$PATH:/usr/java/jdk1.5.0_07/bin
+    
+Set JAVA_HOME / PATH for all user
+    You need to setup global config in /etc/profile OR /etc/bash.bashrc file for all users:
+    export PATH=$PATH:/usr/java/jdk1.5.0_07/bin
+    
+    
+Set Ant:
+    export ANT_HOME=/usr/local/ant
+    export JAVA_HOME=/usr/local/jdk-1.5.0.05
+    export PATH=${PATH}:${ANT_HOME}/bin
+    
+Eclipse:    
+    svn_plugin - http://subclipse.tigris.org/update_1.6.x      
+    
+
+解决屏幕亮度不能调问题：
+   You should edit the following section:
+
+    Code:
+    ## additional options to use with the default boot option, but not with the
+    ## alternatives
+    ## e.g. defoptions=vga=791 resume=/dev/hda5
+    # defoptions=quiet splash
+
+to
+    Code:
+    ## additional options to use with the default boot option, but not with the
+    ## alternatives
+    ## e.g. defoptions=vga=791 resume=/dev/hda5
+    # defoptions=quiet splash nomodeset acpi_backlight=vendor
+
+    And run: sudo update-grub
+    
+有道桌面词典使用:
+   Download: http://sourceforge.net/projects/yodao-free/files/python-dict/
+        or http://hi.baidu.com/pkuwwt/blog/item/410269cf3ad2b734f8dc6139.html
+   压缩包中是dict.py脚本, 增加可执行权限：chmod +x dict.py
+   Usage: python dict.py chinese 则会查看chinese这个单词的释义
+    
+Ubuntu中的隐藏文件：
+   默认情况下，Nautilus 不显示文件夹里的某些系统文件和备份文件。这将能防止意外修改或删除它们，
+   减少对系统的损害，也可以使得像主文件夹这样的文件夹不至于太杂乱。文件夹浏览器不显示：
+    * 隐藏文件，即文件名以 (.) 开头的文件。
+    * 备份文件，即文件名以 (~) 结尾的文件。
+    * 在指定文件夹中的 .hidden 文件里列出的文件。
+    您可以在指定文件夹里，通过点击查看 ▸ 显示隐藏文件显示和隐藏文件。
+    要在 Nautilus 中隐藏一个文件，也可以重命名这个文件，在文件名的开头加上一个点击(.) ，或者在这个
+    文件夹下，创建一个名称为 .hidden 的文本文件，然后把要隐藏的文件名添加到里面    
+    
+Create link:(创建快捷方式)
+   cd ..
+   ln -s adir/a .  --If two file names are given, `ln' creates a link to the first file
+                    from the second.
+                    
+   ln -s TARGET LINKNAME            
+   
+      ie:  ln -s /media/EAE8DE9CE8DE65FB/Documents\ and\ Settings/xjBean/桌面/  Desktop/xp_desktop
+
+    # if the link is broken, don't use the option -s
+                --        
+
+Ubuntu C++ programming environment:
+    一、 C/C++编译器和基本库和常用工具（gcc系列）
+    刚装好的系统中已经有GCC了，但是这个GCC什么文件都不能编译，因为没有一些必须的头文件，
+    所以要安装build-essential这个软件包，安装了这个包会自动安装上g++,libc6-dev,linux-libc-dev,libstdc++6-4.1-dev等一些必须的软件和头文件的库。
+    1、安装所需要的软件包：
+      sudo apt-get install build-essential
+
+    2、编译：创建C源代码ctest.c
+      gcc -Wall ctest.c -o hello
+
+    C＋＋源代码则要将gcc改为 g++。
+    选项 -Wall 开启编译器几乎所有常用的警告──强烈建议你始终使用该选项。
+
+    3、运行：
+
+    二、 GTK/GNOME开发环境（库、IDE、工具）
+    所需要的软件包：
+    sudo apt-get install gnome-dev
+
+    三、 Qt/KDE开发环境（库、工具、IDE）
+    库、工具（软件包）：
+    sudo apt-get install kdesdk
+    IDE（软件包）：
+    sudo apt-get install kdevelop
+
+    四、关于本机装的Anjuta
+    Anjuta 只不过是个写C,C++ 的IDE环境而已。配备库文件后，才可以写程序，包括在终端运行的程序（类似于DOS程序），和图形界面程序（类似于窗口程序）。
+   
+组合命令用法：
+   mkdir qq && cd qq &&
+   wget http://dl_dir.qq.com/qqfile/qq/QQ2008stablehij/QQ2008.exe &&
+   HOME="$(pwd)" LANG=zh_CN.gb18030 wine QQ2008.exe
+    
+Ubuntu9.10 QQ自动退出问题解决：    
+    方法如下：   
+        sudo gedit /usr/bin/qq
+        在第二行加入： export GDK_NATIVE_WINDOWS=true
+    即全文修改为：
+        #！ /bin/sh
+        export GDK_NATIVE_WINDOWS=true
+        cd /usr/share/tencent/qq/
+        ./qq
+    保存后退出，重启QQ      
+    
+ooffice      --run OpenOffice 
+    
+    
+dictionary: gnome-dictionary
+    
+Model net connection:
+ sudo pppoeconf 
+
+start pppoe connection:
+    pon dsl-provider
+    
+stop pppoe connection:
+    poff
+
+plog  --show status
+ifconfig ppp0
+
+无线路由＋Model上网：
+    左单击右上角无线网络标志，查看是否有Wireless Networks 标识，
+若有将能看到已存在的无线网络连接，如shoe_shop,
+设置 ssid: WPA & WPA2 Personal
+    Password: xxxxxx
+
+pppoe:
+ID:  rla4128622
+pwd: x4128622
+wireless key: cexobuknshoe_shop
+wireless route admin key: xjbean_cexobukn
+         route 远程管理port: 821
+
+Ubuntu9.10修改启动项：
+Ubuntu以前版本启动项存放在/boot/grub/menu.lst文件中。
+Ubuntu9.10启动项存放在/boot/grub/grub.cfg文件中，且该文件为只读属性。
+知道这些就好办了。
+1.我们先来给它加上可写（write）属性：
+在终端输入
+sudo chmod +w /boot/grub/grub.cfg
+然后输入：
+sudo gedit /boot/grub/grub.cfg      即可打开启动项文件。
+
+Install Ubuntu9.10 theme:====================================================
+
+First edit /etc/apt/sources.list file
+    sudo gedit /etc/apt/sources.list
+add the following lines
+    deb http://ppa.launchpad.net/bisigi/ppa/ubuntu karmic main
+    deb-src http://ppa.launchpad.net/bisigi/ppa/ubuntu karmic main
+add the GPG key using the following command: 
+    sudo add-apt-repository ppa:bisigi
+Update the source list using the following command
+    sudo aptitude update
+Install all the themes using the following command
+    sudo aptitude install zgegblog-themes
+or click on the following link
+    apt://zgegblog-themes
+This will install the following themes
+
+If you want to install above themes separately use the following commands
+sudo aptitude install showtime-theme
+sudo aptitude install balanzan-theme
+sudo aptitude install infinity-theme
+sudo aptitude install wild-shine-theme
+sudo aptitude install exotic-theme
+sudo aptitude install tropical-theme
+sudo aptitude install bamboo-zen-theme
+sudo aptitude install ubuntu-sunrise-theme
+sudo aptitude install aquadreams-theme
+(http://www.ubuntugeek.com/nice-themes-for-ubuntu-9-10-karmic-users.html)
+(note: can't use apt-get install)
+
+Remove Themes
+If you want to remove full package use the following command
+    sudo aptitude remove zgegblog-themes
+If you want to remove each theme use the following syntax
+    sudo aptitude remove themename
+Note :- themename is showtime-theme,balanzan-theme etc
+
+
+使环境变量立刻生效命令：
+    $ source .bashrc
+
+umask 和 chmod要点：
+1. 文件基数为666，目录基数为777，即文件无设x位，目录可设x位
+2. chmod是设哪个位，哪个位即有权限，而umask反之。
+chmod 600 .pwd  -- 将原有.pwd文件权限 rw-r--r-- 改为 rw-------
+
+例一：设要生成的文件以rw- r-- r--这样的权限字出现，即真实权限用八进制表示为644，则被666基数减得022，022即掩码。使用umask 022。
+例二：设要生成的目录权限以rwxr-xr-x这样的权限字出现，即真实权限用八进制表示为755，则被基数为777的权限字相减后，得掩码022。则使用umask 022进行设置。
+
+play music:  $totem  file(or dir)
+view image: $eog file(or dir)
+
+change login shell:
+    chsh
+    /bin/bash   (or /bin/sh)  --must use absolute path    
+
+
+Shell 脚本编程： ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+cat > text.out << eof －－输入重定向，将输入的内容写入text.out文件，并以eof作为结束符（可换成其他任意字符）
+cmd1 | cmd2  --将cmd1的結果作为cmd2的输入
+    如，$cat /etc/passwd | grep false
+通配符： ［...］－－代替中括号内的任意一个字符
+!?string?  －－搜寻過去指令中有某個字串的指令
+alias name='cmd' --给命令起一个别名,该設定似乎只在当次登录有效，注意等号两边没有空格
+        －－解决：可以在一開始就設定在 ~/.bashrc
+alias --show all alias names
+alias name-- show somealias
+unalias name--release alias
+
+命令后台工作： C－z ;bg cmd
+
+单引号： 'something' －－单引号中的内容是不变的（可理解为字符串）
+双引号："something"  －－自动替换双引号中的变量值
+    如, color=red
+        echo "$color" -->red
+        echo '$color' -->$color
+    －－单引号更严格一些，它可以防止任何变量扩展；而双引号可以防止通配符扩展但允许变量扩展。
+echo "*.jpg"  －－>*.jpg
+echo \*.jpg   --> *.jpg
+echo \$SHELL  --> $SHELL
+
+back quote(｀｀) --倒单引号内的命令会被先执行，如下：
+    $ echo “There are `who | wc -l` people online”
+    --> There are 1 people online
+         
+键盘读取变量： 
+    read var －－然后回车，输入变量值－－>var=value
+    read -p "input a num: " num --回车后，输入num值
+        －－echo $num
+
+数组： var[index]=1,2,3,4
+      echo $var
+
+环境变量：
+    env --可以看到所有环境变量
+    set
+    export
+变量名称：
+    HOME SHELL HISTSIZE LANG
+
+alias rm = ‘rm -i’－－删除时提示
+
+运算：
+var=$((1+2))            －－记住，是双括号
+declare -i var=6/2      －－与上同
+let var=1*2             －－与上同，声明一个变量
+    －－>let var++
+
+Write shell:------------
+
+    shell script :  由许多命令组成的可执行文件
+    执行脚本或命令： ./name  
+                  bash name
+    header:  脚本功能，
+
+
+/etc/shells－－该文件记录着所有可用的shell
+
+sudo shutdown -h +100 就表示电脑在100分钟后关机(此时手动关机是没用的，关机和重启都会变成登出)
+用 sudo shutdown -c来取消自动关机的命令。
+
+-k 并不真正关机而只是发出警告信息给所有用户
+-r 关机后立即重新启动
+-h 关机后不重新启动
+-f 快速关机重启动时跳过fsck
+-n 快速关机不经过init 程序
+-h 12:00 在12点关机
+-q 100 100分钟后退出运行的程序关机
+
+shift 是左移参数列表，shift一次就将最左边的参数$1移出去了，然后
+原来的$2现在就变成了$1。 
+shift 3 就是移出3个参数，之后原来的$4就变成了现在的$1。
+
+dirname 命令用于取出路径名中除最后一个节点之外的名字。如果pathname中不带 / 字符，则输出结果为 . ，表示当前目录
+    $ dirname /home/tito/mydir  
+      --># /home/tito 
+
+在日常的开发中，我们的shell脚本可以加入如下命令，找到shell脚本的所在目录
+Shell代码
+   1. path_home=`dirname $0`  
+   2. cd $path_home  
+
+$@意义：
+    以("$1""$2"...)的形式保存所有输入的命令行参数;
+如， exec $JAVA $JAVA_HEAP -classpath "$CLASSPATH" $CLASS $@
+
+cd !$  －－将前一个命令的参数用到当前的cd后面
+cmd1; cmd2 --先执行 command1 ,不管 command1 是否出错,接下来执行 command2
+cmd1 && cmd2 --只 有 当 command1 正 确 运 行 完 毕 后 , 才 执 行 command2
+du  --计算文件磁盘空间的使用情况
+jobs －－在当前终端中，正在运行着哪些命令与程序
+less $(locate README.mouse)  －－命令替换功能，locate 的输出作为less的参数
+    该机制的语法是：cmd1 $(cmd2)  
+pidof gedit  --找到gedit的进程号
+  如，关闭gedit,可用：  kill $(pidof gedit)
+
+可以通过反斜杠（back slash）来引用特殊字符，如：
+    ls \!*
+或者通过单引号
+    ls '!'*   ,但ls '!*'  将查找名为'!*'的文件
+
+命令间重定向：（通过管道）
+command1 | command2 
+    管道经常将一个程序的输出送到'more'或'less'来阅读。
+如，
+    rpm -qa | grep ^x | less
+  第一个命令给出所有已安装的 RPM 包,第二个则将其过滤(filter:'grep'),只剩下
+以'^x'开头的包,第三个命令则将结果以翻页的方式显示。
+
+重定向至文件：
+
+sort filename  --对文件内容进行排序
+>>  输出添加到已存在的文件中
+echo "string" >> file
+    将 string 加到文件 file 中。这是不打开文件而完成编辑的好办法
+
+  ls .bash*
+  将看到这些文件:
+   .bash_history :记录了您以前输入的命令,
+   .bash_logout :当您退出 shell 时,要执行的命令,
+   .bash_profile :当您登入 shell 时,要执行的命令,
+   .bashrc :每次打开新的 shell 时,要执行的命令。
+
+
+static IP setup:================================================================
+sudo gedit /etc/network/interfaces  ,will see: 
+        auto lo 
+        iface lo inet loopback 
+add following:
+    auto eth0 
+    iface eth0 inet static 
+    address 192.168.1.5 
+    netmask 255.255.255.0 
+    gateway 192.168.1.1 
+    
+set up DNS:
+    $sudo gedit /etc/resolv.conf 
+ie., add: 
+    nameserver 61.177.7.1 
+    
+reboot network component:
+        sudo /etc/init.d/networking restart 
+will show Reconfiguring network interfaces... [OK] 
+ it will be ok!
+
+
+gimp  --edit image 
+eog  -- open image
+amule  --电驴下载工具
+
+Install Fetion:
+    1.Download deb from :  http://code.google.com/p/libfetion-gui/downloads/list
+    2.dpkg -i fetion.deb  --if error , install related dependency first
+
+在Ubuntu中创建新用户，通常会用到两个命令：useradd和adduser。虽然作用一样，但用法却不尽相同：
+
+* 1. 使用useradd时，如果后面不添加任何参数选项，例如：#sudo useradd test创建出来的用户
+    将是默认“三无”用户。一无Home Directory，二无密码，三无系统SHELL。
+    方法：
+        1）用useradd guest 创建用户
+        2）手工为guest用户创建/home/guest主目录，改变其所有者和所属组均为guest:guest
+        3）将/etc/skel下的隐藏文件拷到主目录： cp -r /etc/skel/.?*  /home/guest
+* 2. 使用adduser时，创建用户的过程更像是一种人机对话，系统会提示你输入各种信息，然后会根据这些信息帮你创建新用户
+
+
+查找可以安装的包：
+$apt-cache search emacs*
+
+http://ip138.com/  --查询公网IP
+
+显示登录用户：
+who     --min
+w       --最详细信息
+finger  --更詳細信息显示
+
+
+抓图：gnome-screenshot --interactive
+
+ping 127.0.0.1  －－通表示TCP／IP工作正常
+nmap -PN 116.25.84.224  --扫描对方已经打开的端口
+
+开启端口映射，路由器端设置：
+    转发规则－－》虚拟服务器－－》映象端口
+    安全设置－－》远端WEB管理－－》远端WEB管理IP地址，0.0.0.0设成公网IP地址
+
+traceroute 4.2.2.2  ---下一跳跟踪
+
+Linux分区与格式化步骤：
+1. sudo fdisk -lL
+2. fdisk /dev/sdax  --show help menu
+3. d                --delete partitions
+4. n,               --create partitions
+5. e/p,             --create primary or extended partition
+6. t 83             --change partition type   
+7. w                --save
+8. p                --pring partition info
+10. mkfs.ext3 /dev/sdax   --format partitions, note that there is no any space between mkfs and .ext3    
+fdisk命令动词后面必需跟硬盘设备名 而不能跟分区名
+mkfs.ntfs /dev/sdb2   --first, must install ntfsprogs 
+
+SSH usage:
+scp -r temp/ hardy@10.1.2.186:/home/hardy/shell_test/ --copy files from windows to ubuntu
+net start sshd
+ssh hxiong@127.0.0.1 --to test
+or ssh localhost
+
+install sshd in cygwin:
+1. install openssh from cygwin:
+2. enter into cygwin console, ssh-host-config,all yes.
+if the partion of cygwin installation is not NTFS, when step 6 following error will show:
+*** Query: Should privilege separation be used? (yes/no) no --when this occurred, type no
+
+ubuntu下开启SSH服务器：（即以Ubuntu系统为SSH的服务端）＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+网上有很多介绍在Ubuntu下开启SSH服务的文章，但大多数介绍的方法测试后都不太理想，均不能实现远程登录
+到Ubuntu上，最后分析原因是都没有真正开启ssh-server服务。最终成功的方法如下：
+
+sudo apt-get install openssh-server
+
+Ubuntu缺省安装了openssh-client,所以在这里就不安装了，如果你的系统没有安装的话，再用apt-get安装上即可。
+
+然后确认sshserver是否启动了：
+
+ps -e |grep ssh   （this ps -e is like ps -A）
+
+如果只有ssh-agent,那ssh-server还没有启动，需要/etc/init.d/ssh start，如果看到sshd那说明ssh-server已经启动了。
+
+ssh-server配置文件位于/etc/ssh/sshd_config，在这里可以定义SSH的服务端口，默认端口是22，你可以自己定义成其他端口号，如222。然后重启SSH服务：
+sudo /etc/init.d/ssh restart
+
+ssh连接：ssh xjtu129@202.117.15.165
+断开连接：exit
+
+sshd (8)  --ssh  man帮助
+
+
+用FTP访问远端服务： ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+   ftp
+   open 10.1.3.3          －－or use:  ftp 10.1.3.3
+   --required usename & pwd
+
+   FTP命令使用：
+       ！/exit/quit---退出
+       ？command  --ftp某条命令的帮助
+       append 使用当前文档类型配置将本地文档附加到远程电脑上的文档
+           格式:append local-file [remote-file]
+        cd 更改远程电脑上的工作目录
+       FTP> delete 删除远程电脑上的文档?
+     格式:delete remote-file
+
+       2. 下载文件
+   下载文件通常用get和mget这两条命令。
+   a) get
+   格式：get [remote-file] [local-file]
+   将文件从远端主机中传送至本地主机中.
+   如要获取服务器上E:\rose\1.bmp,则
+   ftp> get /rose/1.bmp 1.bmp (回车)
+   b) mget　　　　　　
+   格式：mget [remote-files]
+   从远端主机接收一批文件至本地主机.
+   如要获取服务器上E:\rose\下的所有文件,则
+   ftp> cd /rose
+   ftp> mget *.* (回车)
+   注意：文件都下载到了linux主机的当前目录下。比如，在　/root/yint下运行的ftp命令，则文件都下载到了/root/yint下。
+   3.上传文件
+   a) put
+   格式：put local-file [remote-file]
+   将本地一个文件传送至远端主机中.
+   如要把本地的1.bmp传送到远端主机E:\rose,并改名为333.bmp
+   ftp> put 1.bmp /rose/333.bmp (回车)
+   b) mput
+   格式：mput local-files
+   将本地主机中一批文件传送至远端主机.
+   如要把本地当前目录下所有bmp文件上传到服务器E:\rose 下
+   ftp> cd /rose （回车）
+   ftp> mput *.bmp　（回车）
+   注意：上传文件都来自于主机的当前目录下。比如，在　/root/yint下运行的ftp命令，则只有在/root/yint下的文件linux才会上传到服务器E:\rose 下。
+   4. 断开连接
+   bye：中断与服务器的连接。
+   ftp> bye (回车)
+
+sudo chmod u+w /usr/   --给目录(/usr)的所有者增加写权限
+sudo chmod o+w /usr/   --给其他用户增加对/usr/的写权限
+
+
+======================================================判断文件或目录是否存在，或具有权限
+
+  1. #!/bin/sh
+  2.
+  3. myPath="/var/log/httpd/"
+  4. myFile="/var /log/httpd/access.log"
+  5.
+  6. #这里的-x 参数判断$myPath是否存在并且是否具有可执行权限
+  7. if [ ! -x "$myPath"]; then
+  8.     mkdir "$myPath"
+  9. fi
+ 10.
+ 11. #这里的-d 参数判断$myPath是否存在
+ 12. if [ ! -d "$myPath"]; then
+ 13.     mkdir "$myPath"
+ 14. fi
+ 15.
+ 16.
+ 17. #这里的-f参数判断$myFile是否存在
+ 18. if [ ! -f "$myFile" ]; then
+ 19.     touch "$myFile"
+ 20. fi
+ 21.
+ 22. #其他参数还有-n,-n是判断一个变量是否有值
+ 23. if [ ! -n "$myVar" ]; then
+ 24.     echo "$myVar is empty"
+ 25.     exit 0
+ 26. fi
+ 27.
+ 28. #两个变量判断是否相等
+ 29. if [ "$var1" = "$var2" ]; then
+ 30.     echo ‘$var1 eq $var2′
+ 31. else
+ 32.     echo ‘$var1 not eq $var2′
+ 33. fi
+
+if [ $# = 0 ]; then
+    echo "no any arguments"
+
+for arg in $@   ＃stand for all args
+do                                      ---this "do" must 换行
+  echo "I found the argument $arg"
+done
+
+exit 0  # successful
+exit 1  # failure
+
+shell中， 0---true  
+         1---false
+
+任何 Linux命令结束时,都会返回一个代表运行结果的整数值给shell.
+可用特殊变量 $?来表示返回值:
+
+
+                  
+$ test 10 -lt 5    ### 10 < 5 ?
+$ echo $?
+                  
+$ test -n "hello"  ##“hello”字符串的长度不为 0 吗?
+$ echo $?
+
+test 有一个不寻常的别名:[(左方括号),以便用于条件判断与循环中.
+
+切记: 
+    “[”是一个命令,它和任何其他命令一样,在命令名称与各个参数之间至少要保持一个空格的间隔
+
+shell script 的输入主要是靠 read 命令来取得,它每次从 stdin 读入一行数据,并将其存入一个变量中
+
+
+                                        
+$ FILENAME="My Document"                #含有空格的文件名
+$ ls $FILENAME                          #列出来试试
+ls: My: No such file or directory       #糟了! ls 见到两个参数
+ls: Document: No such file or directory
+
+$ ls -l "$FILENAME"                     #这样才对
+My Document                             #ls 只见到一个参数
+
+如果变量名称与另一个字符串紧接在一起,则必须以一对花括号界定:
+  $ HAT="fedora"
+  $ echo "The plural of $HAT is $HATs"
+  The plural of fedora is                 # 糟了!没“HATs”这个变量       
+
+  $ echo "The plural of $HAT is ${HAT}s"
+  The plural of fedora is fedoras        # 这才是我们要的结果
+
+expr $NUMBER + 5   --(+ 符号的左右两侧至少要有一个空格)
+
+for i=i+1, you can use: 
+    1. i=$(expr $i + 1)
+    2. i=`expr $i + 1`
+
+在 shell script 里表示变量值时,最好以双引号界定,以免造成运行时错误
+
+read letter
+case $letter in
+    xiong)
+        echo "you input xiong"
+        ;;
+    [aeiou])
+        echo "$letter is a vowel"
+        ;;
+    [0-9])
+        echo "$letter is a digit"
+        ;;
+    *)
+        echo "unkown letter"
+        ;;
+esac 
+
+
+
+有一个由root拥有的文件如 root_file, 我想把为一个guest用户添加对该文件的写权限，怎么做？
+sudo chmod o+w root_file
+
+   sudo chmod 664 file1
+   sudo gpasswd -a guest root   --将guest添加到root组
+sudo chmod 620 file1
+sudo u=rw, g=w, o=file1
+
+
+sudo /etc/init.d/mysql   --start/stop mysql
+
+Use mysql:
+   hell> mysql -h host -u user -p
+
+version:
+mysql> SELECT VERSION(), CURRENT_DATE;
+mysql> select user();
+mysql> show databases;    --show how many db (看来有几个数据库)
+mysql> drop database db_name --delete a db(schema) 
+mysql> CREATE DATABASE menagerie;
+mysql> use db_name;       --connect database; 
+mysql> mysql -h host -u user -p
+mysql>show tables;
+mysql> CREATE TABLE pet (name VARCHAR(20), owner VARCHAR(20),
+   -> species VARCHAR(20), sex CHAR(1), birth DATE, death DATE);
+mysql> DESCRIBE pet;
+mysql> INSERT INTO pet
+   -> VALUES ('Puffball','Diane','hamster','f','1999-03-30',NULL);  --insert only one record every time
+mysql> select version();
+
+grant user:
+
+edit file: /etc/mysql/my.cnf, comment line: bind-address       = 127.0.0.1  (将该行注释掉)
+sudo /etc/init.d/mysql restart
+GRANT insert, select,update, delete ON puer.* TO 'username'@'hostname' IDENTIFIED BY 'password';
+
+可以创建一个文本文件“pet.txt”，每行包含一个记录，用定位符(tab)把值分开，并且以CREATE TABLE语句中列出的列次序给出。对于丢失的值(例如未知的性别，或仍然活着的动物的死亡日期)，你可以使用NULL值。为了在你的文本文件中表示这些内容，使用\N（反斜线，字母N）。例如，Whistler鸟的记录应为(这里值之间的空白是一个定位符)：
+mysql> LOAD DATA LOCAL INFILE '/path/pet.txt' INTO TABLE pet;
+
+
+很多命令里，-i表示提示或者不区分大小写，比如grep,find
+
+SSH usage:
+scp -r temp/ hardy@10.1.2.186:/home/hardy/shell_test/   --copy files from windows to ubuntu
+net start sshd
+ssh hxiong@127.0.0.1  --to test
+or ssh localhost
+
+
+
+/////////////
+dpkg -l|grep linux  --find installed packages
+sudo apt-get remove --purge linux-image-2.6.24-19-generic   ----delete no used kernel
+
+sudo hdparm -Tt /dev/sda   --pring hard disk parameters,about read speed 硬盘性能测试 
+
+问题（question）:
+After installed a Ubuntu on USB Hard Disk by LiveCD, I can't boot from my local 
+Hard disk and only can do this from USB HD.
+Solving:
+    sudo fdisk -l   --print partition info,get boot partition and root partition
+    sudo mount /dev/sda10  /mnt/       ---mount root partition
+    sudo mount /dev/sda9   /mnt/boot/  ---mount boot partition
+    sudo grub-install --root-directory=/mnt/ /dev/sda 
+
+==================================================================================
+use VirtualBox install WindowsXP: 
+    1. we can boot and install from CD , and not need iso image
+    2. 设置网卡为桥接，enable Audio device, setup share folder	
+    3. setup boot order for CD/DVD ROM in storage option
+    4. start virtual Machine
+
+share folder with windowsXP:
+    1.From the VirtualBox's menu, go to Devices → Shared Folders...  to add/remove the 
+    folders of the host operating system that you would like to share with the 
+    guest operating system (Windows XP, in this example). When done click Ok.
+
+    2. in Windows ,Go to Network Places, you will see VirtualBox share folder.
+
+virtualBox install win7:
+    解决：安装时蓝屏问题
+    虚拟机设置里面，system子项里面把IO APIC打开
+
+    Windows 7 Professional Retail Key（专业版）
+        •HWRFF-2FFYX-XFXP2-DYFC3-BX3B7
+        •YT9K9-4R938-3TVXX-3Q3QT-9HBXM
+        •C3X7Y-R6WWH-BRXRD-FY84C-FXWHK
+        •XJBR4-M42Q4-QPJ9C-BRDRJ-KHPVY
+        •TF3Q7-YYP8R-D78R7-W9Q9M-DXVBK
+        •J8D39-J2WM3-6368H-JV8G9-BYJJQ
+        •P3H89-V3P2R-JVBTF-YM2J2-FTMT3
+        •RGM4T-3VT6B-GTYPY-3FHP2-HV2YJ
+        •TTY4D-RDKK9-TYB2T-68WJW-M69KJ  --use this
+
+VBoxManage list [--long|-l] vms|runningvms    
+VBoxManage startvm <uuid>|<name>    --start vm
+VBoxManage controlvm
+
+VBoxManage controlvm Windows poweroff  ---power off windows VM
+VBoxManage startvm Windows             ---start windows vm
+
+
+resolve pdf 文档打开乱码问题：
+    sudo apt-get install poppler-data 
+    http://wiki.ubuntu.org.cn/PDF%E6%96%87%E6%A1%A3%E7%9A%84%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98
+    
+Don't need to modify the env path: (create a symblic link)
+    sudo ln -s /opt/foxit/Foxit/FoxitReader /usr/bin/foxit
+
+windows下txt文件Ubuntu下打开乱码问题解决：
+    输入gconf-editor即可，前面不需要加Sudo
+    依次点开
+    apps->gedit-2->preferences－＞encodings 中的auto-detected
+    在双击弹出对话框中加入GB18030，GBK，GB2312,然后将GB18030,GB2312移到最上
+    再次打开.txt文件，问题是不是解决了?
+
+chown root /u        Change the owner of /u to "root".
+chown root:staff /u  Likewise, but also change its group to "staff".
+chown -hR root /u    Change the owner of /u and subfiles to "root".
+
+敲 ENTER 时，光标(cursor)   在哪里并不要紧，因为 shell 总是会整行地
+读取。
+
+ctrl+shift+上下方向键： 上下滚屏
+(reverse-i-search)   －－-向后增量搜索
+
+环境变量中若没包含“.”,则必须在 script 名称之前加上“./”,
+shell 才能找到你的 script: $ ./myscript
+
+How to create a 永久 connection between VM host and guest ?
+    
+/bin/javaws --to run .jnip file
+
+ubuntu-bug ibus
+
+install firefox4.0:
+1. sudo add-apt-repository ppa:ubuntu-mozilla-daily/ppa
+2. sudo apt-get update
+3. sudo apt-get install firefox-4.0
+
+python2.7 make ibus can't work:    
+    无意中，发现：编译安装并不更新/usr/bin/python， 这是个链接，还链接到以下版本。删除之，链接到不同的python版本，逐一试之，发现python2.6好使。
+    sudo rm /usr/bin/python
+    sudo ln -s /usr/bin/python2.6 /usr/bin/python
+    再敲入ibus-setup，久违的ibus界面出来了。
+    Uninstall python 2.7:
+        make sure you don't have Python binaries such as "/usr/local/bin/python" 
+        which override the default "/usr/bin/python". This last one should be a 
+        symbolic link to the previous Python binary, "/usr/bin/python2.6".    
+       finally, i removed file /usr/local/bin/python to solve the issue.   
+
+Solve ibus "no input window" steps:(ibus没有输入法窗口)：
+    1] Under System->Administration->Language Support
+
+    For "Keyboard input system" choose "ibus"
+
+    2] Under System->Preferneces->Startup Applications
+    Click on "Add" and fill min dialog box as
+
+    Name: iBus
+    Command: ibus-daemon -drx
+    Comment: the ibus demon
+
+    Now click "Add"
+
+    Note: all options in -drx are needed.
+    -d makes ibus-daemon actually run as a deamon.
+    -x starts the ibus xim server so that applications that only use xim can use it
+    -r this is more subtle. It re-starts ibus. If you don't have this, ibus will work OK the first time you log in. However when you log out ibus will still be running. When you log in again, "ibus-daemon -dx" will be called and will think "I'm already running so I don't need to do anything". The problem is that the running version of ibus expects a different gnome session (the one you logged out of) and as a result you won't see the ibus applet. It's actually still usable in this state, but its much nicer to have the applet.
+
+    3] Open .bashrc in an editor (e.g. gedit) and add the following lines:
+
+    export GTK_IM_MODULE=ibus
+    export XMODIFIERS="@im=ibus"
+    export QT_IM_MODULE=ibus
+
+    Note: You can probably get away without [3], as far as I can make out it is 
+    only needed for some legacy apps that run in a terminal. But, what the hell,
+     it doesn't do any harm!
+
+＃＝＝＝＝IP 域名映射
+    sudo vi /etc/hosts   --
+    /etc/hosts 檔案在 Windows 位於 %WINDIR%\system32\drivers\etc\hosts
+    
+    添加：
+    66.249.80.104  code.google.com
+
+vpn plug-in:
+    network-manager-pptp
+    network-manager-openvpn
+
+clien connect to vpn server:  ============================
+Obtain your connection type (currently available are Microsoft PPTP, Cisco, or OpenVPN) and authentication details from your VPN administrator.
+
+Install Network Manager Applet through the Add/Remove in the Ubuntu menu.
+
+Install the plug-in for your connection type - either network-manager-pptp, network-manager-vpnc (Cisco) or network-manager-openvpn (use Synaptic Package Manager or apt-get).
+
+Left click the network manager applet (two monitor screens one behind the other probably in the bottom right of your screen) and select VPN Connections->Configure VPN->Add, then enter your connection details. There may be another icon that looks similar to this, which will bring up a dialog 'Connection Properties' if you left click it - this is not the one you want. Reboot if the applet is not visible.
+
+Left click the network manager applet and select VPN Connections then click on your connection to connect.
+
+If your new connection is greyed out and unselectable, or all you see is Manual Configuration...:
+
+    Backup /etc/network/interfaces to /etc/network/interfaces.original.
+
+    Delete all lines from /etc/network/interfaces not including the string "lo" (leaving two lines, probably the first two, beginning auto and iface).
+    Reboot. 
+
+If the above step leaves you with no internet connection at all, replace the original file and reboot. 
+
+=======================Ubuntu r搭建 PHP开发环境
+所谓LAMP：Linux，Apache，Mysql，PHP
+
+安装 Apache2：
+sudo apt-get install apache2
+安装PHP模块：
+sudo apt-get install php5
+安装Mysql
+sudo apt-get install mysql-server
+
+其他模块安装：
+sudo apt-get install libapache2-mod-php5
+sudo apt-get install libapache2-mod-auth-mysql
+sudo apt-get install php5-mysql
+sudo apt-get install php5-gd
+
+前两个很容易明白，要想apache能够解析PHP，就需要借助这两个模块来找到php engine。
+第三个在php操作mysql数据库时用到，大多数人都有数据库编程经验，所以这就不用多解释了。
+第四个GD库。
+
+apache2相关配置＝＝＝
+多数配置都在/etc/apache2目录及其子目录下完成
+1.apache根目录
+安装完apache2，根目录在/var/www下，可以通过http://localhost/测试一下是否好用。
+当然也可以在该目录下新建一个文件test.html来试一试http://localhost/test.html。
+2.PHP解析问题
+    （本人机器上似乎不存在该问题）
+3.改变apache2的默认目录到当前的开发目录
+    apache2的默认目录配置在/etc/apache2/sites-enabled/00default文件中。
+    找到该文件中的DocumentRoot项， 将/var/www改为你的开发目录就OK了。
+
+    当然，还有一种方法就是不该边默认目录，只是在var/www下建立一个到你的目录的链接。
+    比如你的目录在/home/username/phptest，那么你只要
+    sudo ln -s /home/username/phptest /var/www/phptest
+    这样你就可以通过http://localhost/phptest访问你的工作目录了。
+    ［注意］链接文件名中不能含有“.”，否则apache2会将其当作为一个文件试图解析而无法达到链接目录的效果。
+
+    个人推荐用后一种方式，这样可以多个工作目录并行开发。
+
+配置中常用命令
+重启apache
+sudo /etc/init.d/apache2 restart
+建立系统链接
+sudo ln -s a b
+
+配置PHP5
+sudo gedit /etc/php5/apache2/php.ini
+    
+PHP 中的所有变量都是以 $ 符号开始的。
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝DJANGO_SETTINGS_MODULE设置问题
+DJANGO_SETTINGS_MODULE is undefined 的错误，
+在环境变量中添加DJANGO_SETTINGS_MODULE变量，将其值设置为mysite.settings(或其他你本地python项目的值)
+添加PYTHONPATH＝F:/workforce/python
+(F:/workforce/python为python project的工作目录，存放project, mysite是一个project目录，seetings为她的设置模块）
+
+
+

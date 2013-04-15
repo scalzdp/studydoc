@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0014)about:internet -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+ <title>无标题文档</title>
+ </head>
+
+<body>
+ <!--***********开始*************-->
+ <script type="text/javascript">
+ //<![CDATA[
+ var tips; var theTop = 200/*这是默认高度,越大越往下*/; var old = theTop;
+ function initFloatTips() {
+	 tips = document.getElementById('floatTips');
+	 moveTips();
+ };
+ function moveTips() {
+	 var tt=50;
+	 if (window.innerHeight) {
+		 pos = window.pageYOffset
+	 }
+	 else if (document.documentElement && document.documentElement.scrollTop) {
+		 pos = document.documentElement.scrollTop
+	 }
+	 else if (document.body) {
+		 pos = document.body.scrollTop;
+	 }
+	 pos=pos-tips.offsetTop+theTop;
+	 pos=tips.offsetTop+pos/10;
+	 if (pos < theTop) pos = theTop;
+	 if (pos != old) {
+		 tips.style.top = pos+"px";
+		 tt=10;
+	 }
+	 old = pos;
+	 setTimeout(moveTips,tt);
+ }
+ //!］>
+function show()
+ {
+	 initFloatTips();
+	 var FloatTips=document.getElementById("floatTips");
+	 FloatTips.style.display="block";
+	 
+ }
+ </script>
+ <style type="text/css">
+ div#floatTips{
+ position:absolute;
+ border:solid 1px #777;
+ padding:3px;
+ top:250px;
+ left:500px;
+ width:300px;
+ background:#cccccc;
+ color:white;
+ }
+ </style>
+ </head>
+ <body>
+ <div id="floatTips" style="display:none">
+ 
+ <a href="#" onClick="floatTips.style.display='none'">关闭层</a><br>
+ 
+浮动层
+
+ </div>
+ <input type="button" id="btnShow"  value="显示" onclick="show()" />
+ <!--**********结束***************-->
+ <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#F7F7F7">
+ <tr>
+     <td height="2101"> </td>
+ </tr>
+ </table>
+ </body>
+ </html>

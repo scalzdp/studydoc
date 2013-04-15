@@ -1,0 +1,97 @@
+1.Eclipse可以开发C,C++,Python,PHP,java,对于Python开发中Eclipse还支持Jython,Pyunit,团队开发等其他功能。
+
+2.Python可以在java和.Net两大平台上使用，可以使用java和C#扩展Python
+	Jython完全使用java编写的Python解析器。Jython使得Python程序可以在Java虚拟机上运行。
+	IronPython是Python在.Net平台的实现。
+
+3.字节代码下面这段脚本可以吧hello.py编译为hello.pyc二进制文件。
+	import py_compile
+	py_compile.compile('hello.py')       //问题1.如何定位该文件存放的位子，报告错误没有找到该文件。
+	
+4.经过优化源文件生成的扩展名“pyo”的文件。
+	a.启动命令行窗口，进入hello.py文件所在的目录。
+	b.在命令行中输入”python -O -m py_compile hello.py“
+	-O表示生成优化代码	-m表示把导入的py_compile模块作为脚本运行。编译hello.pyo需要调用py_compile模块中的compile()方法。
+	
+5.代码中self相当于Java或C#中的this
+	class Student:
+	_name=""  #私有变量前必须有两个下划线
+	def __init__(self,name):
+	self.__name=name #self相当于Java中的this
+	def getName(self):
+		return self.__name
+		
+	if __name__=="__main__":
+	student=Student("aaa")  #类Student对象，该类传入参数”aaa“
+		print student.getName()
+		
+6.函数名，通常小写	
+
+7.注释：Python还有一些特殊的注释，已完成一些特别的功能，如中文注释，程序的跨平台等。
+	中文注释，必须在Python文件的最前面加上
+		#-*— coding: UTF-8 -*-
+	如果需要使用Python程序运行在windows以外的平台，需要在Python文件的最前面加
+		#！/user/bin/python
+	利用注释调试程序，合理的注释方法可以检查程序中的错误。另外一种做法是，将正确语句加上注释，单独运行可能有问题的语句，检查语句错误(使用较长代码)。
+
+8.语句的分隔
+	Python支持分号，主要通过换行来时识别语句的结束。
+	如果一行中书写多条语句，就必须使用分号分隔每个语句，否则Python无法识别语句之间的间隔。
+	Python支持多行写一条语句使用"\\"作换行符。
+	
+9.变量的赋值
+	Python中变量不需要申明，变量的赋值操作即是变量声明和定义的过程。
+	Python中一次新的赋值，将创建一个新的变量。即使变量名称相同，变量的标识不相同id(x)
+	使用元祖可以一次对多个变量赋值。
+	Python对变量的回收采用也是垃圾回收机制。
+	
+10.全局变量
+	全局变量是在函数最外面声明
+	如果要对该函数进行引用。使用global保留字，global用于引用全局变量。
+	# 错误的使用全局变量  
+    _a = 1 
+    _b = 2 
+    def add(): 
+		#global _a   #这里声明对全局变量的引用只有这样，下面的_a才是全局变量。
+		_a = 3    #没有使用global保留字引用全局变量，这里的_a是局部变量
+		return "_a + _b =", _a + _b #这里的_b是全局变量
+    def sub():  
+		_b = 4 
+		return "_a - _b =", _a - _b  #_a全局变量，_b局部变量。
+    print add()  
+    print sub() 
+	
+11.Python中没有常量保留字
+	可以自定义一个常量类，来实现常量的功能。实现原理，调用类自带的字典__dict__,判断常量是否包含在字典中。如果包含就抛出异常，否则，给新创建的变量赋值。
+
+12.数值类型
+	Python提供了复数类型。方便科学计算。注意复数类型的写法与数学中的写法相同
+
+13.字符串类型
+	三引号(三个单引号)中可以输入单引号、双引号或换行等字符
+	Python的每个对象都有一个属性__doc__，这个属性用于描述该对象的作用。
+	在输出的字符串中如果含有单引号，需要使用双引号表示字符串。如果字符串里面含有双引号，需要使用单引号表示字符串。
+	
+第三章：
+1.结构化程序设计。
+	结构化程序设计是以模块设计为中心，将待开发的软件系统划分为若干个相互独立的模块，这样使完成每一个模块的工作变得明确。
+	结构化程序设计主要方法，自顶向下、逐步细化。把需要解决的问题分成若干个任务来完成，再对每个任务进行设计，逐步细化。
+	Python的控制台输入函数为input()，输入为字符串必须加引号
+	和raw_input()捕获用户的原始输入，用户可以随意输入。使用字符串存储，需要相应的转化
+	
+2.实现switch语句的功能。
+	Python中没有switch语句，Python可以通过字典实现switch语句的功能。
+	方法：第一步，定义一个字典，字典是由件值对组成的集合。其次，调用字典的get()获取相应的表达式。
+	
+3.for循环
+	for 变量 in 集合：
+	....
+	else
+	....
+
+4.break 和 continue语句
+	break语句可以使程序跳出switch语句，也可以结束循环语句。
+	break语句不能运行在循环体或分支语句之外.
+
+5.结构化程序实例一
+	xrange的用法和range用法一样，不过xrange返回时一个xrange对象。每次遍历只返回一个值。range()返回一个列表，一次计算返回所有值。xrange效率高于range

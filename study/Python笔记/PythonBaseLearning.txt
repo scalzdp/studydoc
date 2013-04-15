@@ -1,0 +1,149 @@
+1.复合表达式：
+对于and，当计算a and b 时，Python回从前到后还是计算，取值。
+对于or ，当计算a or b时，Python会计算a，如果a真则取a ，然后计算b
+对于not ,取反
+
+2.给变量赋值：
+多变量赋值  a,b,c=1,2,3
+多变量赋值可以用于变量交换
+a,b,c=c,b,a就可以完成值的交换。
+
+3.Number数值型
+sys模块包含一个maxint成员，该成员保留整形变量的最大正整数值。
+
+4.String字符串型
+字符串在python中被看成了单个字符的序列，具有对象的特殊功能，字符串是固定的，不可变的。
+反斜杠“\”字符串可放于多行。
+使用三个单引号或双引号字符串跨行显示。
+可用“*”重复字符串如：'a'*5  输出为’aaaaa‘
+字符串可用in 或 not in 运算符来测试字符是不属于一个字符串的成员。
+可以对字符串分片，string[start:end]
+
+5.List列表：
+列表的数据时可变的，通过list(seq)函数包一个序列类型转换成一个列表。list(('test'))转换成['t','e','s','t']
+range()和xrange()自动生成列表。
+list.sort()可对list列表排序。
+
+6.元祖Tuple
+元祖不可变。不能对元祖中的元素进行添加、修改和删除操作。
+可对元祖进行索引、分片、连接和重复。
+使用len()求元祖长度。
+
+7.序列对象
+in 运算符可判断当前对象是不是序列对象成员。
+
+8.Dictionary 字典
+字典元素分，键和值
+字典可嵌套，可以再一个字典里面包含另一个字典。如test={"test1":{"mytest":10}}
+字典可以修改，找到对应的键直接修改
+del monthday["Jan"]删除字典条目
+字典不属于序列对象，所以不能进行连接和相乘。字典没有顺序
+字典提供keys和values方法，返回字典中定义的所有键和值
+
+9.File文件
+使用open()对文件进行操作。
+input=open("text.txt") #打开文件
+for line in input.readlines():  
+	print line
+input.close()   #关闭
+
+10.理解引用
+把一块数据存储在对象中，变量时对象的唯一引用
+每一个对象包含引用计数器，它记录当前有多少个变量正在引用该对象。sys.gettrefconut(obj)
+
+11.copy and deepcopy
+列表或其他包容器对象的浅副本能够生成对象本身的副本，但也会创建对有列表包含的对象的引用。copy模块的copy(obj)函数创建
+列表或其他包容器对象的深副本能够生成对象本身的副本，并递归生成所有子对象的副本，copy模块的deepcopy(obj)函数创建
+
+12.标识数据类型
+通过type(obj)函数标识数据类型
+types模块包含python的内置数据类型的类型对象。
+
+13.数组对象
+数组只包含一些类型的简单数据。
+创建数组 首先导入import array  第二部： z=array.array("a")完成创建,a表示数组对象类型代码，如果不完成第三部该数组为空数组。      第三部：z.append(1)正式向数组中添加数组而且只能是一个int类型。
+	tolist()方法可把数组转换为列表  
+	fromlist(list)可以吧列表项附加到数组末尾
+	tostring()可以把数组转换为字节的序列 与fromstring(list)方法刚好相反
+	tofile(file)吧数组转换为字节的序列，并写入文件  f=open("file","打开方式wb、rb")
+	与fromfile(file,count)方法
+
+14.控制语句
+if，for，while三种控制语句
+
+15.函数
+赋值对象属于局部作用域，除非使用global关键字进行声明。
+函数中的参数：
+在一个函数中对参数名赋值不影响调用者
+在一个函数中改变一个可变的对象参数会影响调用者。
+参数可分为，
+	默认参数：默认值必须在非默认参数之后
+	元祖参数：在连接参数和默认参数之后
+	字典参数；最后定义
+	在单个函数定义中，只能使用一个tuple参数和一个字典参数。
+
+16.常用函数
+abs(x) 取绝对值
+callable(object)测试对象是否可调用。
+cmp(x,y) 比较x和y连个对象
+divmod(x,y)函数完成除法运算，返回商和余数
+isinstance(object,class-or-type-or-tuple)测试对象类型
+len(object)函数返回字符串和序列的长度
+pow(x,y[,z])函数返回以x的y次幂。如果给出z值就计算x的y次幂被z取摸的值
+range([lower,]stop[,step])函数按参数生成连续有序整数列表。
+round(x,[,n])返回浮点数x的四舍五入值，如果给出n表示取到小数点后的位数
+type(obj)返回对象的数据类型
+xrange([lower,]stop[,step])和range类似返回一个xrange对象
+
+17.内置类型转换函数
+chr(i)返回ASCII码对应的字符串
+complex(real[,imaginary])把字符串或数字转换成复数
+float(x)把数字或字符串转换成浮点数。
+hex(x)把整数转换成十六进制数。
+long(x[,base])函数包数字和字符串转换成长整数，base为可选的基数
+list(x)序列对象转换成列表
+int(x[,base])数字和字符串转换成一个整数，base为可选的基数。
+min(x[,y,z....])返回给定参数的最小值。
+max(x[,y,z....])返回给定参数的最大值
+oct(x)把整数转换成八进制数
+ord(x)返回一个字符串参数的ASCII码或Unicode值
+str(obj)把对象转换成可打印字符串
+tuple(x)包序列对象转换成tuple
+
+18.序列处理函数
+常用的len(),max()和min()同样可用于序列
+filter(function,list)它会把函数应用于序列中的每一项，并返回该函数返回真值得所有项，过滤掉返回为假的所有项。
+map(function,list[,list])把一个函数应用于序列中的所有项，并返回一个列表。
+reduce(function,seq[,init])函数先取得序列的前两项，传递给提供的函数，获得结果在与取得的第三个元素传递给函数，以此类推直到结束。
+zip(seq[,seq,....])函数可以把两个或多个序列中相应项合并在一起，并以元祖格式返回它们。
+
+19.模块
+import 功能
+	创建新的名称空间，该名称有输入模块中定义的所有对象
+	执行模块中的代码
+	创建该名称空间的变量名
+	from....import....
+20.string模块
+replace(string,old,new[,maxsplit])替换函数，如果给出maxsplit值，可以控制替换的个数。
+capitalize(string)函数可以把字符串的首个字符替换成大字
+split(string,seq=None,maxsplit=-1)字符串以seq分割成为列表返回
+join(string[,seq]) 返回用seq连接的字串，默认seq是空格
+
+21.time模块
+time()以浮点形式返回linux新世纪以来已过的秒数
+ctime([sec])把秒数转换成日期格式，如果不带参数则显示当前时间
+sleep(secs)，定时
+
+22.类
+
+23.异常处理
+
+24.文件处理函数和方法
+除了系统中的try...except....以外还是用raise[exception[,data]]手动引发异常
+
+25文件处理
+open函数可以打开文件open(filename[,mode[,bufsize]]) 其中mode表示打开文件方式，bufsize表示是否使用缓存
+
+26.正则表达式
+
+

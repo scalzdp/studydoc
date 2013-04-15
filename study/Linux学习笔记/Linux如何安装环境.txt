@@ -1,0 +1,9 @@
+	.bashrc   --环境变量配置文件
+	gedit .bashrc --编辑器
+	source .bashrc --让修改立即生效
+	
+	在linux中 Tab键可以自动补齐命令 -t ./  --表示到当前目录
+	tar -xvf 文件包名 ，解压命令
+	sudo 管理员权限命令
+	
+3.运行MySql 命令 mysql -u root -p   --之后输入密码就可以了

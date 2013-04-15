@@ -1,0 +1,123 @@
+﻿<script language="javascript" type="text/javascript">
+    window.history.forward(1);
+    function ShowNameList(o,hfID,ddlID,ddlLeg1)
+    {
+        var btn=o;
+        var div = document.getElementById("div" + document.getElementById(hfID).value);
+        if (div !=null)
+        {
+            div.style.display="";
+            btnTop=btn.offsetTop;
+            btnLeft=btn.offsetLeft;
+            btnHeight=btn.clientHeight;
+            btnWidth=btn.clientWidth;
+            while (btn = btn.offsetParent){btnTop+=btn.offsetTop; btnLeft+=btn.offsetLeft;}
+            div.style.left=btnLeft;
+            div.style.top=btnTop+btnHeight+6;
+            
+            document.getElementById(ddlID).style.visibility="hidden";
+            document.getElementById(ddlLeg1).style.visibility="hidden";
+        }
+    }
+    function HideNameList(o,hfID,ddlID,ddlLeg1)
+    {
+        var div = document.getElementById("div" + document.getElementById(hfID).value);
+        if (div !=null)
+        {
+            setTimeout(_Hide(div),10);
+            document.getElementById(ddlID).style.visibility="";
+            document.getElementById(ddlLeg1).style.visibility="";
+        }
+    }
+    function NameSelected(hfID,name)
+    {
+        document.getElementById(document.getElementById(hfID).value).value=name;
+    }
+    function Hide(o)
+    {
+        o.style.display="none";
+    }
+    function _Hide(o)
+    {
+        return function(){ Hide(o);}
+    }
+    function ChangeName(o,msg)
+    {
+        var data = window.showModalDialog("Admin_ChangeName.aspx?msg="+msg, "", "dialogHeight:150px;dialogWidth:260px;center:yes;help:no;resizable:no;status:no;scroll:yes;");
+        
+        if (data != null)
+        {
+            var ids = o.toString().split(',');
+            var names =data.toString().split(',');
+            for(var i=0;i<ids.length;i++)
+            {
+                document.getElementById(ids[i]).value=names[i];
+            }
+            __doPostBack('btnNext','');
+        }
+    }
+     function HidePrice() 
+    {
+       $("td[class='ItemControl5']").each(function(index,o){$(o).text("-");});
+    }
+    </script>
+	
+	
+	另外一个控件里面Admin_ChangeName:
+	
+	
+	
+	    <script language="javascript" type="text/javascript">
+    function Submit(o)
+    {
+        ids=o.toString().split(',');
+        var names ="";
+        for(var i=0;i<ids.length;i++)
+        {
+            names +=document.getElementById(ids[i]).value+",";
+        }
+        names=names.substring(0,names.length-1);
+        window.returnValue = names;
+        window.close();
+    }
+    function Cancel()
+    {
+        window.close();
+    }
+    function ChangeName(ddlID,txtID)
+    {
+        ddl=document.getElementById(ddlID);
+        txt=document.getElementById(txtID);
+        for( i = 0 ; i<ddl.length ;i++)
+        {
+            if(ddl[i].selected)
+            {
+                txt.value=ddl[i].innerText;
+            }
+        }
+    }
+      function Check()
+    {
+        if(document.getElementById("pnlMsg")!=null)
+        {
+            var flag=0;
+            $("input[name$='txtSubName']").each(function(i,o)
+            {
+             var str =$(o).val();
+              if(str.indexOf("/")==-1)
+              {
+                flag=1;
+                return false;
+               }
+            }
+            );
+            if(flag!=0)
+            {
+            alert("请按照正确格式输入英文姓名！");
+            return false;
+            }
+            else return true;
+        }
+        else return true;
+    }
+    </script>

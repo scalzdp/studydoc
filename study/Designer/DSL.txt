@@ -1,0 +1,18 @@
+ 1. Domain Specific Language (DSL) is a computer programming language of limited expressiveness focused on a particular domain.
+ 2. Each DSL can only handle one specific aspect of a system.
+ 3. DSL用于实现工程中的一些功能，如： CSS,SQL，regular expressions
+ 4. internal DSL ：是宿主语言的一种特性， As such they are often called Fluent Interfaces or Embedded DSLs.
+	external DSL ：completely separate language that is parsed into data that the host language can understand.
+5. DSLs benefit:
+	The most common benefit is that they make certain kinds of code easier to comprehend.
+	a well designed DSL can be understandable by business people,allowing them to directly comprehend the code
+	
+6. Internal DSL just use the regular facilities of the programming language that you are using anyway
+7. External DSL require you to use some special tools
+
+8. DSL allow business people and developers to collaborate more effectively buecause they can  talk about a common set of precise rules that are the executable code
+9. When should i consider making a DSL?
+	when a system with rich business rules or workflow. a well-written DSL should allow customers to understand the rules by which the system works.
+	
+10. 使用 managed extensibility framework (MEF) 可以extend DSL，开发人员能够对DSL编写扩展，无需更改DSL定义。包括菜单命令，拖放处理程序和验证。安装DSL
+	参见：http://msdn.microsoft.com/zh-cn/library/ff972471(v=vs.110).aspx

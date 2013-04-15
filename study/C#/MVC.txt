@@ -1,0 +1,315 @@
+在C#的MVC开发模式中。WebFormsViews只能在这里面添加.aspx和.ascx两种页面。
+	基本语法：用于页面展示<% 代码块 %>
+	<%:语句块 %>输出经HTML编码后的数据
+	<%=语句块 %>
+	<% 语句块 %>
+	一共有上面三种页面数据语法。
+	MVC 模式首先	http://localhost:25193/PageTwo/Two ==>http://localhost:25193/控制器名称/控制器中方法，动作方法
+	
+==========2012/8/6
+参见文档：http://www.cnblogs.com/youring2/archive/2011/07/06/mvc3-1.html
+	1. 建立MVC3 常用为Razor视图引擎，选用使用HTML5语义标签。
+		1.1. 使用Razor语法简洁。易学。Visual Studio 对于Razor提供智能提示和语法着色。Razor不需要程序或者启动Web服务器就能测试。
+	2. 项目运行时，MVC3将页面请求进行映射。
+	3. 添加一个名为Home的控制器。项目文件"Controllers"中添加。
+	4. 对于添加的控制器，默认返回时一个ActionResult，但是某些时候为了满足自身的需要可以修改返回值。返回值可以修改成为任意你想要的数据。
+	5. 在对应的控制器上，右键添加View
+		http://localhost:xxx/home/Welcome（xxx为端口号，在不同的计算机中会有所不同）
+	6. 使用ViewBag传递参数。控制器允许传递参数。        
+		public ActionResult Welcome(string name="")
+        {
+            ViewBag.name = name;
+            return View();
+        }
+	这时候：http://localhost:xxx/home/Welcome?name=Tom       //这样就把Welcome需要的name参数传入。
+	7.对应的View页面
+	@{
+		ViewBag.Title = "Welcome";  //ViewBag.Title ,用于显示当前页面的标题。	
+	}
+
+	<h2>@ViewBag.name</h2>  //这样就可以直接输出在控制器中为动态属性ViewBag.name所赋值的值。
+-----------MVC3 默认提供11中ActionResult的实现
+	在System.Web.MVC命名空间中。
+	ActionResult
+	ContentResult
+	EmptyResult
+	FileResult
+	HttpStatusCodeResult
+	HttpNotFoundResult
+	HttpUnauthorizedResult
+	JavaScriptResult
+	JsonResult
+	RedirectResult
+	RedirectToRouteResult
+	ViewResultBase
+	PartialViewResult
+	ViewResult
+-------------路由映射设置，Global.asax
+	1. 设置url匹配项，并可对对应的参数进行约束。
+	routes.MapRoute(
+		"UsingParams",           //要映射的路由名称,这里路由名称必须是唯一的。
+		"p/{p1}/{p2}/{p3}",      //设置了一个路由映射包含3哥占位符
+		new {                    //默认路由值对象。
+			controller = "Home", 
+			action = "UsingParams"
+		},
+		new { p1 = "[a-z0-9]+", p2 = @"\d+" }         //对占位符中的数据进行约束。p1约束为只能为数值和字符。p2只能为数值。
+	);
+
+------------视图生成
+	视图引擎-->获取相应的视图文件内容。处理填充相应的数据，得到最终代码，再写入响应流中。
+
+===================================================================
+C--------------20120810 Controller 返回页面的 ActionResult 为一个对象集合
+	public ActionResult Index()
+	{
+		List<Models.Products> products = new List<Models.Products>();
+		products.Add(new Models.Products { ProId = 1, ProductName = "手机", ProductPrice = 2000 });
+		ViewBag.Products = products;   
+		return View();  //
+	}
+
+	
+	return RedirectToAction("Two", "PageTwo");  //第一个参数是跳转的Action方法，第二个参数是控制器名称。  
+	---Session["aaa"] = value; //在Controller中把一个数据value存入Session["aaa"]中
+	
+	public ActionResult Index()
+	{
+		ViewBag.FacePic = facePic;
+		return View("Index"); //如果return View();这样那么无论哪个方法调用Index方法都会跳转到本方法自己的视图。所以需要在return View("Index")中指定需要调转的Action方法。
+	}
+	
+	---------------应用于Action的过滤器，
+	1.定义过滤器实现ActionFilterAttribute接口
+	public class TestFilter:ActionFilterAttribute
+	{}
+	2.在需要过滤的Action方法
+	[TestFilter]
+	public ActionResult Index()
+	{}
+	---------------应用于Controller的过滤器,类似应用于Action的过滤器
+	[TestFilter]
+	public class HomeController:Controller
+	{}
+	
+	-----------规定页面的访问形式。
+	[AcceptVerbs(HttpVerbs.Post)] //提交方式只能是Post
+	public ActionResult Check()
+	{}
+	
+	----------规定Action的名称(相当于重命名ActionName)
+	[ActionName("userName")]
+	public ActionResult User()      //访问这个控制器 localhost:xxxx/home/userName 进行访问。
+	{}
+	
+	----------MVC缓存 OutputCache
+	[OutputCache(Duration=10,VaryByParam="none")]   //Duration=10,指定10秒的缓存数据时间。
+	public ActionResult Cache_action()
+	{}
+	
+	----------异常过滤器
+	HandleErrorAttribute 是MVC默认异常过滤器。
+	默认情况下，如果没有指定异常类型，过滤器将默认处理器名为Error的视图。
+	将过滤器从最具体到最不具体进行排序。
+	[HandleError(ExceptionType=typeof(ArgumentException),View="ArgError")]  //HandleError 捕获异常，可以设置多个属性(例如：View属性)->当页面有异常的时候就跳转到异常页面。
+	public ActionResult GetProdut(string name)        //给函数传递数据 http://localhost:25193/Cache/Getprodut?name="aaa"    //这样就可以给函数传递参数  
+	{                                                 
+		if (name == null)  //如果name为空那么就会引发一个异常。
+		{
+			throw new ArgumentNullException("name");
+		}
+		return View();
+	}
+	
+	----------授权过滤器
+	AuthorizeAttribute ，可以使用它来限制对动作方法的访问。  阻止非验证用户访问特殊控制器动作的一个简单方法。
+	//还会判断，如果用户没有登录页面会跳转到登录页面。
+	
+	----------自定义动作过滤器
+	实现过滤器的特性必须编写继承自FilterAttribute的类并实现如下4个接口之一：
+		IauthorizationFilter
+		IactionFilter
+		IresultFilter
+		IexceptionFilter
+
+============================================================	
+V---------View Razor视图页面传值。
+@Html.ActionLink("click me!", "Happi", "Home", new { uname = "菜菜" })  //这样是不能传递值，需要他的五个参数的重载@Html.ActionLink("click me!", "Happi", "Home", new { uname = "菜菜" },null)
+																		//或者如果都在同一个控制器下面可以不指定Controller@Html.ActionLink("click me!", "Happi", new { uname = "菜菜" })
+																		//
+@Html.ActionLink(显示名称，Action，要传递的RouteData，html属性)
+
+	在view.cshtml循环显示这些集合中的数据
+	@foreach(var i in ViewBag.Products)
+	{
+		<p>@i.ProId</p>
+		<p>@i.ProductName</p>
+		<p>@i.ProductPrice</p>
+	}
+
+@Html.TextBox("pwd");
+	-----View把Controller的Action返回的对象转换为指定对象方法。
+	@{MVCDemo.Models.RegisterUserInfo m = ViewBag.User as MVCDemo.Models.RegisterUserInfo;}  //区分代码块，一个@符号表示一个代码块。(一个代码块需要有明显的代码结束标志如";")
+	
+    @m.LoginName <br />
+    @m.Email <br />
+    @m.Password <br />
+    @m.Phone <br />
+	--Controller中的Action方法与视图方法不一定一直只需要在视图的form的提交的时候,指明跳转到哪一个控制器的哪一个Action方法
+	@using (Html.BeginForm("Get_userinfo","PostMessage",FormMethod.Post))    //@using (Html.BeginForm("控制器里面的Action名称","控制器名称",Form提交方法))
+	{ }
+	-----View GET,POST两种请求 Razor视图
+	MVC的GET方法，通过url交付数据给controller处理函数的。
+	@using (Html.BeginForm("Get_userinfo","PostMessage",FormMethod.Post))  //FormMethod.Post方法提交数据，在对应Controller函数中使用 Request.Form["username"]; 获取数据
+	 {																	   //FormMethod.Get 方法提交数据，在对应Controller函数使用Request["username"];获取数据
+		@Html.TextBox("username");
+		@Html.TextBox("pwd");
+		<input type="submit" value="提交" id="btn_sub" />
+	 }
+	MVC的POST方法，通过Form表单传输数据给controller处理函数。***这里需要把这个form指定提交时处理的函数，如果Html.BeginForm()为空默认进入对应的Action方法中。
+	表单提交方式有两种method="post" 、method="get"
+	post 就request.form["name名"],get就request.get["name名"] ，
+	直接request["name名"] 就可以接受这两种提交方式
+	
+	视图可以操作Model。通常将业务处理方法的调配权交由Controller控制，所以View中不要调用Model的业务方法。
+	-------HTMLHelper类
+	BeginForm()方法，实现表单的开始部分。生成<from> ，form里面的Action和method(提交方式) 都是由BeginForm方法中的参数指定。
+		如果使用using 语句就不需要EndFrom()结束了。
+	BeginRouteForm()方法，根据URL路由规则实现一个指定路径的<form>标记。
+	EndForm()方法，负责表单定义的结束部分。产生</form>
+	
+	@using (Html.BeginForm("UploadFace", "Upload", FormMethod.Post, new { enctype = "multipart/form-data" })) //要上传文件需要把enctype = "multipart/form-data"，表示二进制数据。
+	{}
+	
+	----使用局部视图
+	定义一个视图Search
+	在另外一个视图里面应用Search视图方法 @{Html.RenderPartial("Search");}
+	@Html.Partial("Details")
+	@Html.Action("Index", "Home")
+	@{ Html.RenderPartial("Details"); }
+	@{ Html.RenderAction("Index", "Home"); }
+	----如果要给DropDownList添加value和text 就需要字典类型Dectionary
+	emp:
+		controller中：
+		IDictionary<int,string> dic = new Dictionary<int, string>(); //define a dictionary 
+		dic.Add(1, "信息服务部");                                    //give this dictionary assignment
+		SelectList sl = new SelectList(dic, "Key", "Value");         //dictionary to SelectList
+		ViewData["star"] = sl;                                       //put SelectList into ViewData
+		view中：
+		@Html.DropDownList("star");                                  //get data by ViewData's key
+		
+	----URLHelper类
+	Action()方法根据传入值生成URL
+	@Url.Action("Create","Product",new {id=1})
+	Content() 将一个相对路径转换为一个绝对路径。
+	@Url.Content("~/Control/Action")
+	Encode()方法将URL特殊字符编码成可以在URL中传递的密文形式。
+	@Url.Action("Create","Product",new {id=Url.Encode("需要被加密内容")})	
+	RouteUrl()方法根据指定的路由及参数生成一个URL
+	@Url.RouteUrl(new { controller = "Home",action ="Index"})
+	
+	可以自定义视图引擎。思想：通过字符串替换使用定义参数替换HTML代码中的占位符。
+	
+	----模板页的使用
+	1.建立模板页，MasterPage.cshtml
+	@{
+		Layout = null;
+	}
+
+	<!DOCTYPE html>
+
+	<html>
+	<head>
+		<title>MasterPage</title>
+	</head>
+	<body>
+		<div>
+			@RenderBody()
+		</div>
+	</body>
+	</html>
+	2.在子页面中引用模板页
+	@{
+		ViewBag.Title = "Index";
+		Layout = "~/Views/Shared/MasterPage.cshtml";  //Layout指明模板页，指明模板页的位置
+	}
+
+	<h2>Index</h2>
+=========================================================================
+M-------------Models视图模版与数据机架的结合使用
+	必填信息[Required(ErrorMessage = "提示信息")],例如：[Required(ErrorMessage = "ID不能为空")]
+	正则表达式[RegularExpression("^[\u7537\u5973]+$",ErrorMessage="性别只能输入‘男’/‘女’")]
+		例如：[RegularExpression("^正则表达式",ErrorMessage="提示信息")]
+	验证用户输入范围：[Range(1,120,ErrorMessage="年龄必须在1~120岁之间")]
+				例如：[Range(min,max,ErrorMessage="提示信息")]
+				
+	[StringLength(12),Required(ErrorMessage="密码应小于12位")]
+	[DataType(DataType.Password)]
+	public string Password { get; set; }  //上面的两个特性是对属性Password的定义。
+	
+	Model可分为两种一种是实体类，另一种Model存储一些业务逻辑处理程序(业务方法)。
+	
+	
+=========================================================================
+Ajax----------------------在MVC中的使用
+	jquery 中Ajax的使用类似于Python中的ajax使用
+	$.get(url,[data],[callback],[type]);
+	例如：
+		——-——页面
+	$(document).ready(function(){
+		$("#Search").click(function(){
+			$.get("/home/Get_data",
+			{key:$("#blogClass").val()},
+			function(data){
+			$("#blogList").html(data);
+			});
+		});
+		$("Search").click();              //触发一次单击事件
+	});
+		——-——后台
+	public void Get_data()
+	{
+		//处理数据
+		//ranhui shuju 
+		//获取数据
+		string key = Request["key"];  //获取请求服务器的关键字
+		Response.Write(key);  //输出键出值。
+	}
+	
+	$.post(url,[data],[callback],[type])
+	
+	$.ajax(options)
+	
+	
+
+			
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

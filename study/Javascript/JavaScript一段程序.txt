@@ -1,0 +1,37 @@
+//当输入框的内容变化时，调用该函数
+    function searchSuggest() {
+        var inputField = document.getElementById("txtSearch");
+        var suggestText = document.getElementById("search_suggest");
+
+        if (inputField.value.length > 0) {
+            var o = createXMLHttpRequest();       //在javascript中createXMLHttpRequest()创建的对象放入var定义的变量o中
+
+            var url = "Server.aspx?searchText=" + escape(inputField.value); //把inputField.value编码一次然后作为参数传递
+            o.open("GET", url, true);		//调用o对象的本身的方法
+            o.onreadystatechange = function () {
+                if (o.readyState == 4) {
+                    if (o.status == 200) {
+                        var sourceText = o.responseText.split("\n") ;  //可以获得页面后台Response.Write回来的数据
+                        if (sourceText.length > 1) {
+                            suggestText.style.display = "";
+                            suggestText.innerHTML = "";
+                            for (var i = 0; i < sourceText.length - 1; i++) {
+                                var s = ' <div onmouseover="javascript:suggestOver(this);"';
+                                s += ' onmouseout= "javascript:suggestOut(this);" ';
+                                s += ' onclick= "javascript:setSearch(this.innerHTML);" ';
+                                s += ' class= "suggest_link">' + sourceText[i] + '</div>';
+                                suggestText.innerHTML += s;
+                            }
+                        }
+                        else {
+                            suggestText.style.display = "none";
+                        }
+                    }
+                }
+            }; //指定响应函数 
+            o.send(null); // 发送请求 
+        }
+        else {
+            suggestText.style.display = "none";
+        }
+    }

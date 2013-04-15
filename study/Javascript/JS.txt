@@ -1,0 +1,346 @@
+JSandJQ总结：
+    ------------在WinForm中的一个ASP控件btnNext4有两个方法一个是客户端函数一个是服务器端函数。
+				需要在客户端的confirm中点击了取消按钮取消执行btnNext4的服务器端函数
+   window.onload=function(){
+        if(document.getElementById("btnNext4"))
+        {
+            document.getElementById("btnNext4").onclick = function(eve)   //为onclick事件添加了一个事件
+            {
+                if(confirm('确定选择的电话号码？'))
+                {
+                    Send();
+                }
+                else
+                {
+                    preventDefaultAction(eve);
+                }
+            }
+        }
+   }
+   
+   function preventDefaultAction(eve) {     //定义阻止相应服务器端所定义的函数。
+        if (eve.preventDefault) {
+            eve.preventDefault();
+        }
+        else {
+            eve.returnValue = false;
+        }
+    }
+	
+===========DOM操作
+-----删除子节点
+document.getElementById("父节点").removeChild(document.getElementById("要移除的子节点"));
+
+-----清空select 中所有项
+document.getElementById("select的ID").length = 0;
+
+==========基本知识。
+Jquery 对搜索到的页面元素进行过滤，eq()方法
+eq(index) //index 是索引编号从0开始。执行后取第index个元素。
+Javascrpt ，如何使用定时器进行间隔固定时间执行程序
+	var delay;
+	delay=setTimeout(_SendLoop(tels),200);
+
+val()操作，val()区分不带参数和带参数的作用。不带参数的val()是重控件中取出相应的值，带参数的val("aaa")视为控件设置值
+---选择器
+选择父节点;
+	var tparent = $(".hide").parent(); //选择父节点的方法
+	for (var i = 0; i < tparent.length; i++) {
+					$(tparent[i]).hide();   //tparent[i]为DOM节点，需要把DOM节点转换为$Jquery节点一些方法才能被使用。
+				}
+	
+=============数据类型
+-----------typeof
+	typeof操作符可以炒作变量，也可以炒作字面量。使用typeof来区分function和object是非常有必要的。
+
+	undefined 类型知识有一个值。比如声明一个变量未给他初始化，这个变量的值就是undefined
+	Null类型，表示一个空对象引用（空指针），而typeof 检测null会返回object
+	undefined是派生自null的，所以undefined==null 返回时true；
+	Boolean类型，要将一个值转换为对应的Boolean值，直接转换
+		var h = "hello world";
+		//强制转换
+		var hh = Boolean(h); 
+		//隐式转换
+		if(h){
+		}
+		
+	Number类型，包含两种数值：整形和浮点类型。
+	isNaN()用于判断一个值是不是NaN返回true或false
+	以下三个函数可以把非数值转换为数值:Number(),parseInt()和parseFloat().Number()实用与任意类型
+
+	String
+	如果值有toString()方法，则调用该方法并返回相应的结果。乳沟是null或者undefined ，则返回"null"或"undefined"
+	
+	Object类型
+	ECMAScript中的对象其实就是一组数据和功能的集合。
+	
+	------------javascript 对象和数组
+	使用new运算符创建Object
+	var box = new Object();
+	box.name ='xxx';
+	box.age =25;
+	
+	使用字面量方式创建Object
+	var box={
+		name:'xxx',
+		age:25
+	}
+	
+	输出方式：
+	alert(box.name); 或者 alert(box['name']);
+	
+	给对象创建方法：
+	var box = {
+		run:function(){
+			return 'xxx';
+		}
+	}
+	运行方式：
+	box.run();
+	
+	-----Array()
+	var box =[
+		{
+			name:'xxx',
+			age:22,
+			run:function(){
+				return 'run';
+			}
+		},
+		['xxx','yyy',new Object()],
+		33,
+		new Array(1,23,4)
+	];
+	输出：alert(box);
+	
+	默认情况下，数组字符串都会以逗号隔开。如果使用join()方法，则可以使用不同的分割符来构建这个字符串
+	var box =['xxx',34,'yyy']
+	box.join('|') ------> xxx|34|yyy
+	提供栈方法
+	var box =['xx',34]
+	box.push('yy')   //把yy压入栈顶
+	box.pop() //把栈顶的元素弹出。
+	队列方法
+	var box =['xx',34]
+	box.push('yy') //把yy元素排列到队列尾部
+	box.shift() //把队列第一个元素拿出
+	
+	reverse()  //逆向排序，反序
+	sort()   //正向重大到小排序
+	
+===============时间与日期
+	创建一个日期对象
+	var box = new Date();
+	Date.parse()接收一个表示日期的字符串参数，然后返回表示日期的毫秒数。
+	Date.UTC() 接收一个表示日期的字符串参数，然后返回表示日期的毫秒数。
+	--------Date类型专门的格式化字符串方法
+	box.toString() //按照原有样式输出。
+	box.toLocaleString(); //按本地格式输出。
+	box.toDateString(); //侠士星期几、月、日、年
+	box.toTimeString(); //显示时、分、秒和时区
+	box.toLocaleDateString(); //显示星期几、月、日、年
+	box.toLocaleTimeString(); //显示时、分、秒 和时区
+	box.toUTCString(); //显示完整的UTC日期。
+	---------Date以组建方法获取想要的时间
+	box.getTime(); //获取日期的毫秒数
+	box.setTime(200); //以毫秒设置日期
+	box.getFullYear(); //获取四位年份
+	box.setFullYear(2013); //设置年份
+	box.getMonth(); //获取月份
+	box.setMonth(12); //设置月份
+	box.getDate(); //获取日期
+	box.SetDate(8); //设置日期
+	box.getDay(); //获取星期几0表示星期天，
+	box.setDay(3); //设置星期几
+	box.getHours(); //获取小时
+	box.setHours(8); //设置小时
+	box.getMinutes(); //获取分钟 
+	box.setMinutes(34); //设置分钟
+	box.getSeconds(); //获取秒
+	box.setSeconds(59); //设置秒
+	box.getMilliseconds(); //获取毫秒数
+	box.setMilliseconds(5); //设置毫秒数
+	box.getTimezoneOffset(); //返回本地时间和UTC时间相差的分钟数
+	
+	
+==============正则表达式
+	创建正则表达式的两种方式
+	var　box = new RegExp('box'); //直接存放配置的模式
+	var  box = new RegExp('box','i'); //第二个参数表示模式匹配
+	模式匹配的可选参数：
+	i ------> 忽略大小写
+	g ------> 全局匹配
+	m ------> 多行匹配
+	字面量声明正则
+	var box = /box/;
+	
+	测试正则表达式的两个方法：test()和exec()。test()方法在字符串中查找是否存在指定的正则表达式并返回布尔值。如果存在返回true，不存在返回false；
+	exec()方法查找指定正则表达式，如果成功，返回包含查找字符串的相关信息数组。如果不成功，返回null；
+	
+	字符串的正则表达式方法>>
+	String 对象同时提供其他4种正则表达式方式
+	match(pattern)  --> 返回pattern中的子串或null
+	replace(pattern,replacement) -->使用replacement替换pattern
+	search(pattern)  -->返回pattern在字符串中的开始位置，如果不存在返回-1
+	split(pattern) -->返回字符串按照pattern格式拆分的之后的数组
+	常用的正则：
+	-----验证邮政编码：
+	var pattern = /[1-9][0-9]{5}/;   //6为数组，第一位不能为0
+	
+===============Function函数类型
+	//window是js中最外围的对象，即是最大的对象
+	使用变量初始化函数
+	var box = function(num1,num2){
+		return num1+num2;
+	};
+	------作为值的函数
+	函数名本身就是变量，所以可以作为值来传递使用。
+	function box (Function,num){
+		return Function(num);
+	}
+	function sum(num){
+		return num+10;
+	}
+	
+	var result = box(sum,10);
+	----作为指针的函数
+	function box(num){
+		if(num<=1){
+			return 1;
+		}else{
+			return num*arguments.callee(num-1);   //简单的递归函数，使用callee执行本身
+		}
+	}
+	函数内部有一个特殊对象this，this引用表示函数具体执行的操作对象，及当前执行的对象。在全局中的this，表示window
+
+================函数属性和方法
+	每个函数有两个属性：length和prototype。其中length属性表示函数希望接收的命名参数的个数。
+	window.color='红色的';
+	function printColor(){
+		alert(this.color); //这里的this表示window，因为printColor未被其他对象所包含。
+	}
+	
+	prototype下面由两个方法：apply()和call(),这两个方法的好处是可以扩充函数赖以运行的作用域。最大好处就是对象不需要与方法发生任何耦合关系。
+	var color ='红色的';
+	var box={
+		color:'蓝色的'
+	};
+	function sayColor(){
+		alert(this.color);
+	}
+	
+	sayColor(); //作用域window下
+	sayColor.call(this);//作用域window下
+	sayColor.call(box);//作用域在box下面
+
+===============变量、作用域和内存
+	基本类型和引用类型的值。
+	基本类型：基本类型值指保存在栈内存中的简单数据段，即这种值完全保存在内存中的一个位置。
+		基本类型种类：Undefined、Null、Boolean、Number和String。放在栈中的规则，值所占内存大小一定。
+	引用类型值指保存在堆内存中的对象，变量中保存是一个指针。
+		如果赋值为引用类型必须在堆内存中为这个值分配空间。放在堆中的规则，值所占内存大小不一定。
+	创建一个引用类型可以动态向该类型添加属性并赋值。
+	var box = new Object();  //这个申明很重要
+	box.name="DP";           //只用申明为应用类型才能给他添加属性。
+	下面是一个引用类型做参数例子：
+	function box(obj){
+		obj.name="DP";
+	}
+	var p = new Object();
+	box(p);
+	alert(p.name);
+	
+	----------类型检查
+	对于基本类型检查使用typeof
+	对于检查引用类型的类型 instanceof
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+=================jquery
+	jquery 下面几种方法方便的添加新的HTML元素
+	append()在指定的元素的尾部添加一个新内容。
+	prepend() 在指定的元素里前部添加新内容
+	after() 在指定元素前添加新内容
+	before() 在指定元素的后面添加新内容。
+	乍一看append,prepend 和after,before似乎功能一样，但append,prepend指在选中的元素本身（内部）的前面和后面，而after,before指在选择中的元素的前面和后面。
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+				
+				
+====================================================ExtJS=====================================================================
+ExtJS 高端话题：
+	Ext.Button
+	Ext.onReady(function(){
+		new Ext.Button({
+			renderTo:Ext.getBody(),
+			text:"确定",
+			listeners:{
+				"click":function(){
+					alert("欢饮学习Extjs");
+				}
+			}
+		});
+	});
+	属性：
+	renderTo:将当前对象所产生的HTML对象存放指定的对象中。
+	构造函数：
+	handler：指定一个函数句柄，在默认时间出发时调用，此时的默认时间为click
+	listeners: 在对象初始化之前，就将一系列事件进行定义的手段，在进行组件化编程室，特别有用。
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

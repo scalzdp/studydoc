@@ -1,0 +1,30 @@
+需求分析，这是一个记录日志的功能。记录的内容需要知道被修改之前的数据和被修改之后的数据。
+		例如：  姓名由原始的“张三”修改为“李四”。
+	分析，不知道用户修改了那些字段，所以判断实体，如果提交的时候实体中的数据一致的那么就不纪律日志。提交的时候找到实体中不一样的数据然后组织起来存起来。
+	解决方法：第一种，每一个实体类Entity中增加一个方法，该方法的功能就是为了找出修改前和修改后那些字段的值发生的变化。然后存放起来。问题，太多的实体非常麻烦
+	
+	第二种，利用泛型，写出一个公有泛型方法，该方法传入两个对象，然后方法中获得对象的属性，然后比较这些属性里面的数据那些发生了变化然后存放起来。
+	    public static string ToFindDifferent<T>(T newModel, T oldModel)
+        {
+            string result = string.Empty;
+            //get all public property
+            var properties=typeof(T).GetProperties(BindingFlags.Instance|BindingFlags.Public);
+            //bool flag = true;
+            foreach (var prop1 in properties)
+            {
+                //判断 newModel 和 oldModel 对象是否值是一致，
+                if (prop1.GetValue(newModel,null).ToString() != prop1.GetValue(oldModel,null).ToString())
+                {
+                    //如果不一致把不一致的组织成为字符串返回回来。
+                    var type = prop1.Name;
+                    result += type+":";
+                    var oldValue = prop1.GetValue(oldModel, null).ToString();
+                    result += "原始数据" + oldValue;
+                    var newValue= prop1.GetValue(newModel, null).ToString();
+                    result += "修改为" + newValue +" " ;
+                }
+
+            }
+            //返回两个对象不一致的数据
+            return result;
+        }

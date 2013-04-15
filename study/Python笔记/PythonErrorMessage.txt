@@ -1,0 +1,5 @@
+1. indentationError: unexpected indent  //缩进错误，解决方法调整缩进。
+2.SyntaxError:unexpected character after line continuation character //语法错误，语句中有非法字符。解决方法检查语句踢出错误字符。
+3. IndentationError: expected an indented block //需要缩进
+4. Non-ASCII character '\xd6' in file........//表示里面不能有中文，需要加中文需要添加注释
+5.SyntaxError: 'break'outside loop' //break语句不能执行在循环或分支语句之外。

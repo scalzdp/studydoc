@@ -1,0 +1,599 @@
+Python note:
+>>> v = ('a', 'b', 'e')
+>>> (x, y, z) = v
+
+===loop:
+for i in range(10):
+    print 'xjbean'
+
+lambda 函数是一个可以接收任意多个参数(包括可选参数)并且返回单个表达式值的函数。
+>>> g = lambda x: x*2  
+>>> g(3)
+6
+
+>>> (lambda x: x*2)(3) 
+6
+
+lambda 函数是风格问题。不一定非要使用它们，任何能够使用它们的地方，都可以定义一个分离的普通的函数，用它来替换.
+我将它们用在需要封装特殊的，非重用的代码上，用许多小的一行函数不会弄乱我的代码。
+
+给模块起别名：
+import ftplib as ftp
+
+Python脚本和模块都是一个以.py结束的文件，那程序是如何判断一个.py文件是作为脚本还是模块呢？
+关键是一个名为__name__的变量，如果它的值是__main__，则不能作为模块，只能作为脚本直接运行
+
+__init__.py: 包的初始化文件
+
+import sys
+
+import会完成以下三个操作：
+    创建新的名称空间（namespace），该名称空间中拥有输入模块中定义的所有对象；
+    执行模块中的代码；
+    创建该名称空间的变量名
+
+在目录下名hello.py文件里定义一个Dog class, 然后进入python， from hello import hello
+
+d = Dog  --执行后，访问d.name将显示name未定义
+
+＝＝＝pdb调试
+在py文件里加入如下语句：
+import pdb
+pdb.set_trace()
+
+
+n:next
+q:quit
+r:return
+c:continue
+b:break
+h:help
+s:step
+
+运行系统程序
+
+>>>import os
+>>>os.system('ls')            #用os.system()可执行系统命令
+>>>exec "os.system('ls')"     #用exec可执行字符串中的命令，两个命令的效果一样。
+
+通过getattr可以得到一个在运行时才知道具体函数名的对象的引用，能增强我们程序的灵活性。
+
+>>> li=['a','b']
+>>> getattr(li,'append')
+>>> getattr(li,'append')('c')          #相当于li.append('c')
+>>> li
+
+hasattr用于确定一个对象是否具有某个属性。
+
+语法：
+ hasattr(object, name) -> bool
+判断object中是否有name属性，返回一个布尔值。
+
+以下划线开头的标识符是有特殊意义的。以单下划线开头（_foo）的代表不能直接访问的类属性，需通过类提供的接口进行访问，不能用“from xxx import *”而导入；以双下划线开头的（__foo）代表类的私有成员；以双下划线开头和结尾的（__foo__）代表python里特殊方法专用的标识，如__init__（）代表类的构造函数。
+
+================================================================================
+Djaogo note:
+
+change server port:
+    python manage.py runserver 8080
+
+python manage.py runserver 0.0.0.0:8000   --share with other people
+
+为什么我们运行python manage.py shell而不是python?
+python manage.py shell.
+
+manage.py shell命令有一个重要的不同: 在启动解释器之前,它告诉Django使用
+哪个设置文件。Django搜索DJANGO_SETTINGS_MODULE环境变
+量,它被设置在settings.py中。例如,假设mysite在你的Python搜索路径中,那么
+DJANGO_SETTINGS_MODULE应该被设置为:’mysite.settings’
+    运行命令:python manage.py shell,它将自动帮你处理DJANGO_SETTINGS_MODULE
+
+
+eclipse python plug-in:
+http://pydev.org/updates
+svn plugin
+ http://download.eclipse.org/technology/subversive/0.7/update-site/
+
+Django quick start:
+1. create a project
+     django-admin.py startproject mysite
+        --manage.py
+        --settings.py
+        --urls.py
+2. ./manage.py runserver
+
+3. ./manage.py startapp blog  #create app
+        --__init__.py
+        --models.py
+        --views.py
+       config settings.py, find INSTALLED_APPS and add:
+            'mysite.blog',
+
+4. Design model
+    from django.db import models
+    class BlogPost(models.Model):
+        ...
+
+5. Set up DB
+    in settings.py file: #(need to create a DB schame first--username/pwd)
+        DATABASE_ENGINE="mysql"
+        DATABASE_NAME="djangodb"
+        DATABASE_HOST="localhost"
+        DATABASE_USER="root"
+        DATABASE_PASSWORD="root"
+
+6. create tables
+    ./manage.py syncdb  # when add new models, we need to run this command again
+
+7. Set admin app (optinal)
+    1) open settings.py 
+
+8. create admin.py module in your app, add statement like:
+    admin.site.register(Diary)
+
+===============================================================================>
+Mysql setup:
+数据库的关键信息都写在settings.py中，这样做是非常不安全的。现在可以在settings.py里面使用DATABASE项代替以上的配置项，username和password可以写在配置文件中。下面是把username和password放到MySQL数据库的配置文件中，由DATABASE项读取的示例：
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'OPTIONS': {
+            'read_default_file': '/etc/mysql/my.cnf',
+        },
+    }
+}
+
+# my.cnf
+[client]
+database = xxx
+user = xxx
+password = xxxxxx
+default-character-set = utf8
+
+也可以在DATABASES中加入NAME来指定数据库名，client中去除database选项，HOST和PORT这些也都可以写在my.cnf文件中。   
+
+install mysql python driver:
+
+summary steps:
+    $ tar xfz MySQL-python-1.2.1.tar.gz
+    $ cd MySQL-python-1.2.1
+    $ # edit site.cfg if necessary
+    $ python setup.py build
+    $ sudo python setup.py install # or su first
+
+required:
+    1)install mysql
+    2)install python-setuptools
+    3)install libmysqlclient-dev   --to solve "mysql_config" not found
+
+verify mysql driver:
+>>> import MySQLdb
+>>> MySQLdb.apilevel
+'2.0'
+
+DATABASES = {
+ 13     'default': {
+ 14         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+ 15         'NAME': 'puer',                      # Or path to database file if using sqlite3.
+ 16         'USER': 'root',                      # Not used with sqlite3.
+ 17         'PASSWORD': 'root',                  # Not used with sqlite3.
+ 18         'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
+ 19         'PORT': '3306',                      # Set to empty string for default. Not used with sqlite3.
+ 20     }
+ 21 }
+
+
+Python & Django learning note:
+
+for p in publisher_list:
+    print '(%s %s %s %s %s)' % (p.name, p.address, p.city, p.country, p.website)
+
+
+or can do by following:
+    sudo easy_install MySQL-python
+===============================================================================>
+install apache:
+sudo apt-get install apache2 libapache2-mod-python
+
+
+===============================================================================>from-import语法
+from module import 语法：
+Python 中的 from module import * 像 Java 中的 import module.* ；
+Python 中的 import module 像 Java 中的 import module 。
+
+>>> import types
+>>> types.FunctionType             1
+<type 'function'>
+
+>>> FunctionType                   2
+Traceback (innermost last):
+  File "<interactive input>", line 1, in ?
+NameError: There is no variable named 'FunctionType'
+
+>>> from types import FunctionType 3
+
+>>> FunctionType                   4
+<type 'function'>
+
+解释：
+1 	types 模块不包含方法，只是表示每种 Python 对象类型的属性。注意这个属性必需用模块名 types 进行限定。
+2 	FunctionType 本身没有被定义在当前名字空间中；它只存在于 types 的上下文环境中。
+3 	这个语法从 types 模块中直接将 FunctionType 属性导入到局部名字空间中。
+4 	现在 FunctionType 可以直接使用，与 types 无关了。 
+
+什么时候你应该使用 from module import？
+    如果你要经常存取模块的属性和方法，且不想一遍遍地敲入模块名，使用 from module import。
+    如果你想要有选择地导入某些属性和方法，而不想要其它的，使用 from module import。
+    如果模块包含的属性和方法与你的某个模块同名，你必须使用 import module 来避免名字冲突。
+
+另外，它只是风格问题，你会看到用两种方式编写的Python代码。
+尽量少用 from module import * ，因为判定一个特殊的函数或属性是从哪来的有些困难，并且会造成调试和重构都更困难   －－-!!!
+
+===============================================================================>python False
+空列表[]
+空元组()
+空字典{}
+空字符串''
+零值0
+特殊对象None
+对象False
+
+除以上几点所有东西都视为True
+
+
+===============================================================================>CSRF orbidden (403) 错误
+CSRF verification failed. Request aborted.
+
+Solved:
+1. 在表单里加上{% csrf_token %}就行了。
+
+2. 在Settings里的MIDDLEWARE_CLASSES增加配置：
+
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfResponseMiddleware',
+
+
+sudo apt-get install python-pip
+
+pip is a tool bundled with virtualenv to install Python packages.
+( 一个与virtualenv绑定的工具，用于安装python相关的包（依赖库）)
+You should become very familiar with this tool.
+it is used in Pinax extensively to handle dependencies.
+
+
+pip：一个安装和管理python包的工具，It’s a replacement for easy_install.
+The recommended way to use pip is within virtualenv, since every virtualenv has pip 
+installed in it automatically. This does not require root access or modify your system Python installation
+
+=============================Pinax install and quick start:
+====Install Pinax
+Prerequisites¶
+    python2.4+
+    virtualenv 1.4.7+
+    PIL --
+
+before installing, you need to install virtualenv first http://pypi.python.org/pypi/virtualenv
+install:
+    $ virtualenv mysite-env
+    $ source mysite-env/bin/activate
+    (mysite-env)$ pip install Pinax
+
+====Create a project and install default project base --Zero :
+(mysite-env)$ pinax-admin setup_project mysite
+    --pinax comes with many different project bases. The default project based is what we call layer zero. 
+
+===list the existing projects:
+pinax-admin setup_project -l
+
+===Specifying a different project base:
+(mysite-env)$ pinax-admin setup_project -b basic mysite
+
+===run a project:
+(mysite-env)$ python manage.py syncdb
+(mysite-env)$ python manage.py runserver
+
+=====solve error: Django manage.py syncdb throwing No module named MySQLdb 
+bin/easy_install mysql-python  
+
+====solve no module named metron  ****
+(mysite-env)$ bin/python mysite/manage.py syncdb
+(mysite-env)$ bin/python mysite/manage.py runserver
+superuser: junn/junn
+
+pinax module is in dir:
+    /usr/local/lib/python2.6/dist-packages/pinax/
+
+开发自己的应用:
+在YOUR-PROJECT-NAME/apps目录下，把自己原来开发的django应用copy进来吧，也许还需要把你的template copy到templates目录下，
+执行过python manage.py syncdb之后，就可以使用python manage.py runserver 0.0.0.0:80来运行了，
+
+pinax具有以下特点：
+
+    支持openid；
+    支持email验证；
+    密码管理；
+    站点声明；
+    用户短消息；
+    朋友邀请，包括站内邀请和站外邀请；
+    一个基本的twitter应用集成；
+    群组功能，tribes
+    project协同工作；
+    讨论；
+    wiki功能；
+    blog功能；
+    书签功能；
+    tag功能；
+    contact import；
+    投票系统；
+    图片管理。
+
+《简明Python教程》和《Dive Into Python》
+
+
+===================python项目包管理
+服务器环境与本地开发环境不是完全一样, 在本地开发过程中安装一些python django 的第三方包如：
+PIL ,django-voting,debug-toolbar... 一大推。难道要在服务器上从来再pip install 一次吗？
+pip 提供了一个人性化的功能，导出现项目所有的依赖包：
+pip freeze >myenv.txt
+
+
+Brlapi==0.5.4
+CouchDB==0.6
+Django==1.2.1
+Fabric==0.9.2
+GnuPGInterface==0.3.2
+Mako==0.2.5
+MySQL-python==1.2.2
+PAM==0.4.2
+PIL==1.1.7
+Pinax==0.9a1
+SQLObject==0.13.0
+Scrapy==0.10
+Twisted==10.0.0
+Twisted-Conch==10.0.0
+Twisted-Core==10.0.0
+
+==myenv.txt 这个文件 叫需求文件
+
+上传到服务器上 然后  pip install -E  site_env myevn.txt  就可以下载所有依赖的包，并且产生 相应的 virtualenv. 
+
+pinax交流：
+alexliyu2012@gmail.com  
+
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝pinax目录结构：
+1、mysite是项目目录，这里面存放的是这个新建项目的相关配置文件以及模板，而mysite-env才是pinax的目录。因此，做具体的二次开发时候，实际上很多的情况我们所需要修改的文件都在mysite-env/lib/pythonxx/site-packages/pinax目录下，而并不是您的项目目录，当然您也可以重载这些。
+
+2、pinax最新的是0.9x版本，默认的语言包文件并没有中文，我们需要自己来make中文语言包。至于怎么生成中文语言配置文件django.po以及怎么编译成django.mo请直接百度或者google参考django相关教程。我这里只是需要提醒大家，在翻译pinax语言包的时候需要注意：您除了要翻译您的项目下的django.po外，pinax目录内的django.po也必须要翻译，否则你就要郁闷为啥显示的仍旧是英文呢？
+
+3、关于pinax的模板机制。您使用pinax生成的项目目录中的模板并不是全部的模板，其中很大一部分模板并不存在。
+根据django的模板机制，当项目模板目录找不到请求的模板时，会自动去pinax目录寻找。
+因此，在修改模板的时候请自己在项目目录下补全所缺少的模板，或者直接去pinax目录修改相关模板
+
+4、关于中文，pinax毕竟是老外的系统，对于中文的支持并不算是很好。所以很多的应用中文的地方，需要各位自行的进行修改，比如wiki、tag之类的，默认的url规则并不支持中文的slug，所以一定要进行修改。而修改的地方也在pinax目录，找到相应的app目录，然后修改setting。
+
+5、二次开发建议，pinax项目的初衷或者说思路就是构建一个开源的基于django app的sns应用框架，或者说应用脚手架。因此，在建立项目的时候建议使用pinax-admin setup_project -b social mysite2 类似的，生成social项目。因为本身social项目的名称应该就是complete project,他已经最大包含了pinax的app，我们从这个项目入手会省去很多的工作。
+
+6、关于wiki，很多朋友都问我pinax说支持wiki，可是看完了官方文档后仍旧找不到wiki在哪里，到底怎么使用wiki?其实，pinax使用的wiki是名为wakawak的django app，在social项目中已经包含了。我们只需要在项目的urls.py中给它添加相应的url规则并修改base模板，添加menu就可以了。具体修改urls.py,只需要在urlpatterns中添加， url(r"^wiki/", include("wakawaka.urls")),即可。当然，这里会使用它默认的url规则：WIKI_SLUG = r'((([A-Z]+[a-z]+){2,})(/([A-Z]+[a-z]+){2,})*)'，只支持类似TryIt之类的slug，所以请根据实际需要去pinax目录下wakawak app目录中修改setting。
+
+7、还有一些朋友遇到了比如添加了中文包了，也修改了setting文件，但是仍旧不显示中文的情况。这时我建议各位遇到此类问题的朋友先要确保您的配置文件有正确的书写，比如LANGUAGE_CODE = "zh_CN",就千万别写成LANGUAGE_CODE = "zh-CN"，否则那就郁闷了。如果确认后仍旧出现问题，则不妨在setting中这样来写
+
+ugettext = lambda s: s
+
+LANGUAGES = [
+
+    ("zh_CN", u"Chinese"),
+
+    ("en", u"English")
+
+]
+
+然后重启开发服务器，选择English，然后在切换回Chinese，这时应该会解决仍旧显示中文的问题。
+
+ 
+8、如何部署二次开发的pinax，使用buildout命令，生成发行包，然后通过发行包来进行部署。
+
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝制作app的工作流程
+    1.设计models，编辑 models.py，修改settings安装app，syncdb确保设计没有语法错误。
+    2.编辑 admin.py，进入admin 测试 models。
+    3.规划 url，编辑 urls.py，将所有 urls 映射到不存在的 views。
+    4.创建 views，所有 views 的内容都使用临时的HttpResponse。
+    5.制作app的首页(逻辑顶层)的模板，模板内制作指向各个view 的 url。实验。
+    6.按照逻辑顺序一个一个地填充各个 view 的逻辑、模板。
+    7.在 view 的逻辑需要的时候设计 forms，修改 forms.py。
+
+========================================Django Projects (项目)推荐的布局
+example.com/
+   README
+   settings.py
+   urls.py
+   docs/
+       This will hold the documentation for your project
+   static/
+       -In production this will be the root of your MEDIA_URL
+       css/
+       js/
+       images/
+   tests/
+       - Project level tests (Each app should also have tests)
+   uploads/
+       - content imgs, etc
+   templates/
+       - This area is used to override templates from your reusable apps
+       flatpages/
+       comments/
+       example/
+       app1/
+       app2/
+
+=======================================virtualenv虚拟环境
+Virtualenv 对于 Python 项目来说是必须的. 它提供一个隔离不同 Python 运行环境的方法. 典型的, 我们在 /opt/webapps/<site_name> 部署生产环境站点, 在 ~/webapps/<site_name> 目录部署我们的开发环境站点. 每个 project 有它自己的 virtualenv, virtualenv 还充当 project 所有相关代码的根目录. 我们使用 pip 为 virtualenv 添加必要的包.
+
+
+在生产环境部署django应用:
+cd /opt/webapps
+virtualenv mysite.com
+cd mysite.com
+pip install -E . -r path/to/requirements.txt
+source bin/activate
+
+===========================================如何用eclipse+pydev调试django应用
+
+2010-03-14 13:28
+
+1、如何才能通过pydev启动django应用，并且设置断点调试呢？
+
+参考pydev creator的文章《Configuring pydev to work with django》
+
+总结一下就是：django应用的runserver命令会启动两个进程，这是实现auto reload的关键，也是无法设置断点、向cmd打印log的根源，所以runserver加入--noreload参数即可。
+
+不过，问题又来了。这样做导致auto reload功能失去，每次修改源码都要重启服务器。
+
+2、如何保证auto reload的前提下用pydev调试django应用呢？
+
+参考一位老兄的文章《How to debug django web application with autoreload》
+
+总结一下，就是用remote debugger，并且在manage.py中增加一些代码。
+
+然后选择右上角的open Perspective选择other->Pydev
+
+========================================配置Eclipse下的Django开发环境
+安装方法是:
+help->softupdate->addsite填入： http://sourceforge.net/projects/pydev/ 
+
+1.建立PyDev Project
+
+Eclipse IDE－》File－》New－》Other－》Pydev－》选择Pydev Project－》起一个项目的名称（例如demo）－》选择路径，如d:\workspace－》选择适合你的Python版本（我的是2.6）－》将下面的勾去掉，不要建立src文件－》Finish
+
+2.把生成的Django项目目录拷贝到Eclipse刚刚建立的项目下的目录里。回到刚才的Elicpse IDE－》在PyDev Package视图中右键单击新建的项目，从弹出的菜单中选择“Refresh”，即可看到Django的项目工程。添加、删除文件和目录的操作都可以通过右键菜单来完成
+
+3.右键单击PyDev项目－》properties－》选择PyDev-PYTHONPATH－》add Source folder 把你复制进去的项目添加—>确定
+
+4. 对Pydev项目进行配置,配置这样就可以直接和运行tomcat一样启动：选择Pydev的项目名称－》Run菜单－run Configurations－》Python Run－》右键New－》在Main面板中写入项目名称，通过Browse载入项目名称和Main Module，Main Module选择manage.py－》在Augement面板中,argument必须是 runserver --noreload，下面的working directory加入你的base directory。
+
+这样启动时就可以直接点run来运行了
+
+=====================================my Eclipse virtualenv setup:
+1. create a new Pydev project named mysite（最好是用mysite名字，因settings配置里默认用该名）
+2. import filesystem from /home/junn/Release/pinax/mysite/ into the new mysite  --该pinax/mysite由安装pinax时产生，这里主要是要其产生的django标准目录结构
+3. Choose python interpreter: /home/junn/Release/pinax/bin/python
+4. 在PYTHONPATH选项里，添加Source Folder为project根
+5. PYTHONPATH选项里，添加External Libraries:  (不是必须的)
+    /home/junn/Release/pinax/lib
+    /home/junn/Release/pinax/include  
+6. Run:
+    new a python Run-->choose project-->Main Module-->add program arguments
+
+The key in all steps: 
+1. Choose python interpreter: /home/junn/Release/pinax/bin/python （由该设置会自动读取相关lib/include）
+2. new Pydev project 命名为: mysite
+3. import /home/junn/Release/pinax/mysite/ into the new mysite, not from /home/junn/Release/pinax
+3. Run的设置： 
+  
+==============================Pinax中文化步骤：
+1. use translation strings in Python code and templates
+    
+
+2.create language files
+    mysite$ django-admin.py makemessages -l zh_CN    --if error, create locale dir
+    mysite$ mkdir locale
+    mysite$ django-admin.py makemessages -l zh_CN -v2
+
+3. translate the file: mysite/locale/zh_CN/LC_MESSAGES/django.po  
+    #: forms.py:25
+    msgid "There is already this book in the library."
+    msgstr "库里已有该书."
+
+    #: models.py:16 
+    msgid "title" 
+    msgstr "标题"
+
+    #: models.py:17 
+    msgid "publisher" 
+    msgstr "出版社"
+
+4. Compiling the language files
+    mysite$ django-admin.py compilemessages
+
+    Remember to restart the development server every time you compile the messages, so do it now
+
+5. change settings
+open the settings.py file and make sure you have the following settings:
+    USE_I18N = True
+    ...
+    ugettext = lambda s: s
+    LANGUAGES = (
+            ('en', u'English'),
+            ('zh', u'Chinese'),
+)
+
+
+注意：以下(eclipse)工程結构中,针对项目properties-->PYTHONPATH-->Add source folder 时，应添加/mysite/apps, 而不是添加/mysite/apps/about/, /mysite/apps/diary等子目录。否则，会报找不到相应model错误
+mysite/
+    apps/
+        about/
+        diary/
+        profiles/
+    templates/
+
+===========================Pinax 已有设计：
+profile<-->user :  通过user_id(PK, auto生成）产生关联
+
+
+=====================django model
+Diary:
+    property = models.ForeignKey(DiaryProperty)
+
+    --关联关系需在关联的一端维护即可，如上不需要在DiaryProperty里也添加对Diary对象的引用。
+        由DiaryProperty对象获取Diary对象可用： property.diary_set.all()  --其中diary_set属性为Django框架自动添加
+
+ForeignKey(one-to-many), ManyToManyField and OneToOneField require the first argument to be a model class, 
+so use the verbose_name keyword argument:
+    poll = models.ForeignKey(Poll, verbose_name="the related poll")
+    sites = models.ManyToManyField(Site, verbose_name="list of sites")
+    place = models.OneToOneField(Place, verbose_name="related place")
+    ---verbose_name作为描述说明字串
+
+Many-to-one relationships:
+    class Manufacturer(models.Model):
+        # ...
+
+    class Car(models.Model):
+        manufacturer = models.ForeignKey(Manufacturer)
+一个制造商会造多辆汽车，但一辆汽车只会有一个制造商，典型一对多关系，所以用ForeignKey
+
+
+＝＝＝＝＝＝＝＝＝＝＝更新模型步骤（开发环境）：
+1. add properties in model
+2. > python manage.py sqlall diary   --查看CREATE TABLE语句
+3. 访问DB，添加新字段： alter table 语句 --可选用 manage.py dbshell直接调用DB客户端
+4. > python manage.py shell --由此导入model和选中表单（Diary.objects.all()）验证新字段是否被添加
+
+在产品服务器上：
+1.启动DB交互界面
+2.执行开发环境中的 step 3: alter
+3.将新字段添加到模型中－－指在生产环境中更新代码
+4.重启web server 
+
+===删除字段
+1.从model中删除字段，重启Web Server
+2.alter table books_book drop column num_pages;
+
+===删除多对多关联
+1.模型中删除ManyToManyField
+2.drop table books_book_author;  --删除表
+
+
+
+
+
+
+
+
+
+
+
+
+

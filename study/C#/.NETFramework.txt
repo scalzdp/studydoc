@@ -1,0 +1,1300 @@
+===========.NET Framework
+.NET Framework是一个集成在Windows中的组件。它支持生成和运行下一代应用程序与XML Web Services。.NET Framework 在于实现下列目标。
+	提供一致的面向对象编程环境。
+	提供软件部署和版本控制冲突最小化得代码执行环境。
+	提供可提高代码执行安全性的代码执行环境。
+	提供可消除脚本环境或解释环境的性能问题的代码执行环境。
+.NET Framework两个主要组件：公共语言运行时和.NET Framework类库。
+公共语言运行时工能：
+	执行时管理代码的代理。 
+	内存管理
+	线程管理
+	远程处理等核心业务。
+	强制实施严格的类型安全以及可提高安全性和可靠性的其他形式的代码准确性。
+	以运行时为目标的代码称为托管代码，而不以运行时为目标的代码称为非托管代码。
+	安全性；取决于包括托管组件的来源在内的一些因素，托管组件被赋予了不同程度的信任。可以在运行时强制实施代码访问安全。运行时的安全性功能就使用通过Internet部署的合法软件就能够具有特别丰富的功能。
+	托管和非托管代码之间的互操作性使开发人员能够继续使用所需的COM组件和DLL。
+.NET Framework类库：
+
+公共语言运行时：
+	使用基于公共语言运行时的语言编译器开发的代码称为托管代码。公共语言运行时使用元数据来完成，查找和加载类，在内存中安排实例，接卸方法调用，生成本机代码，强制安全性，以及设置运行时上下文边界。
+	语言交互的组件和应用程序。可以定义一个类，然后使用不同的语言从原始类派生出另一个类或调用原始类的方法。
+	
+托管执行过程：
+	1.选择编辑器。
+		如果您的组件必须完全能够被其他语言编写组件使用，您的的导出类型必须只公开公共语言规范(CLS)中包括的语言功能。
+	2.将代码编译为MSIL。编译代码为Mircrosoft中间语言MSIL，并生成所需的元数据。
+		当编译为托管代码时，编译器将源代码翻译为Microsoft中间语言(MSIL)，MSIL和元数据包含在一个可移植可执行PE文件中，此文件基于并扩展过去用于可执行内容的已发布Microsoft PE和通过对象文件格式COFF。
+	3.将MSIL编译为本机代码。实时(JIT)编译器将MSIL编译为本机代码。
+		在程序运行时，JIT编译在加载和执行程序集内容的过程中根据需要将MSIL转换为本机代码。
+		JTI编译在执行过程中根据需要转换MSIL并将生成的本机代码存储在内存中，以提供该进程上下文中的后续调用访问。
+		代码验证：
+			对类型的引用与被引用的类型严格兼容。
+			在对象上只调用正确定义的操作。
+			标识与声称的要求一致。
+		
+	4.运行代码。
+		公共语言运行时提供使托管代码执行能够发生以及可在执行期间使用的各种服务的基础结构。
+		
+=============.NET基础
+1. 点击ASP按钮会首先执行Page_Load事件，在执行Button_Click()事件。//使用服务器控件，需要回发到服务器端处理。点击这样的按钮触发了WebForm的POST动作
+2. 接口：接口的定义方面来说,接口其实就是类和类之间的一种协定,一种约束。。。接口中只能定义方法、属性、事件
+
+
+============基础知识总结
+	数组的大小是数组的所有维度的长度乘积。它表示数组中当前包含的元素的总数。
+	每个维度的索引从 0 开始，这意味着索引范围为从 0 到它的上限。因此，给定维度的长度比该维度的声明上限大 1
+	
+	
+--------FileInfo的使用，移动文件到相应的文件夹中。
+		解决方法，首相把文件拷贝到指定的文件夹中，然后删除原有的文件中的文件。
+
+--------Split(),这个方法有自己的内部实现方式，在大型数据的处理上面可能会导致越界。
+		读取文本文件，需要把txt文本中文件按照一行一行的读取到List<string>或者string[]中的方法。
+		如果使用File.ReadAllText(FileName,Encoding.Default).Split('\r')//这样如果txt文件的行数过多可能会造成数组越界。
+		解决方法使用List<string>用于存放。
+		List<string> Str = new List<string>();
+		StreamReader reader = new StreamReader(FileName,Encoding.Default)
+		while(reader.Peek()!=-1) //返回一个字符用于判定是否读取到文件的最后一行。 
+		{
+			Str.Add(reader.ReadLine());  //把文件中的每一行存放到数据库中
+		}
+-------从用户控件里面需要弹出对话框的方法
+	private void Alert(string message)
+    {
+        Response.Write("<script>alert('" + message + "');</script>");
+    }
+	
+-------枚举类型如何让枚举类型返回一些有用的数据
+	//定义枚举类型，
+	public enum CompareType
+    {
+        [Description("基期")]
+        BaseData = 1,
+        [Description("对比期")]
+        CompareData = 2
+    }
+	//上面定义了枚举类型，然后返回枚举类型的描述。
+	需要using System.ComponentModel;
+	using System.Reflection;
+	 public static  string GetEnumDesc(CompareType e)
+	{
+		FieldInfo EnumInfo = e.GetType().GetField(e.ToString());
+		DescriptionAttribute[] EnumAttributes = (DescriptionAttribute[])EnumInfo.
+			GetCustomAttributes(typeof(DescriptionAttribute), false);
+		if (EnumAttributes.Length > 0)
+		{
+			return EnumAttributes[0].Description;
+		}
+		return e.ToString();
+	}
+	
+-------------IList
+	如果申明一个List的属性用于接收多种List<T>，应该怎样做？把List<int>、List<string>都赋值给一个List。使用IList
+	用IList接收到了动态指定的参数，需要在程序中根据指定参数类型转换为相应的List<int>或List<string> 。写一个循环对IList中的值进行遍历并可以获得里面每一个单个对应的数据类型。
+	写个泛型函数循环一下
+	 public List<T> GetNewList<T>(IList<object> source) //泛型循环
+	{
+		List<T> list = new List<T>();
+		
+		//循环-转换-插入
+		//……
+		
+		return list;
+	}
+=============MVC
+在C#的MVC开发模式中。WebFormsViews只能在这里面添加.aspx和.ascx两种页面。
+	基本语法：用于页面展示<% 代码块 %>
+	<%:语句块 %>输出经HTML编码后的数据
+	<%=语句块 %>
+	<% 语句块 %>
+	一共有上面三种页面数据语法。
+	
+============泛型
+值类型直接分配在栈上；
+引用类型：对象的引用在栈上，对象本身在堆上。
+类实例化对象，该对象是类的一个引用。对象里面存放的是引用类型存放的地址。
+例如：
+	class MM{public int age;}
+	MM a,b;
+	a=new MM();
+	a.age=12;
+	b=a;                    //相当于把存放类的地址传递给了b对象。a和b同时指向同一个地址。
+	a.age=13;
+	console.writeline(b.age);//结果会输出13
+装箱和拆箱：
+	装箱：值类型转换成引用类型。就是把值类型封装成类。
+		  当一个值类型转换为它实现的某个接口或者它的根基类object的时候，-->装箱。
+		  完成了以下过程，1.堆中分配内存。2.内存复制动作，栈上的值类型复制到堆上分配好的位置上面。3.对象或接口得到更新，指向堆上的位置。 
+	拆箱：引用类型转换为值类型。
+泛型：
+	在定义一个类型时，使用另一个或几个类型作为参数，类型参数用<>围住，放在所定义的类型名后面。
+	使用带有类型参数的泛型类型时，参数具体类型指定。
+	class Stack<T> {
+	private T[] m_ItemArray;
+	}
+	使用这个类：
+	Stack<指定类型> s=new Stack<指定类型>();//在使用的使用需要在实例化类的时候指定类型。
+	
+集合：
+	数组是引用类型。
+	
+泛型例子：
+	需求分析，这是一个记录日志的功能。记录的内容需要知道被修改之前的数据和被修改之后的数据。
+			例如：  姓名由原始的“张三”修改为“李四”。
+		分析，不知道用户修改了那些字段，所以判断实体，如果提交的时候实体中的数据一致的那么就不纪律日志。提交的时候找到实体中不一样的数据然后组织起来存起来。
+		解决方法：第一种，每一个实体类Entity中增加一个方法，该方法的功能就是为了找出修改前和修改后那些字段的值发生的变化。然后存放起来。问题，太多的实体非常麻烦
+		
+		第二种，利用泛型，写出一个公有泛型方法，该方法传入两个对象，然后方法中获得对象的属性，然后比较这些属性里面的数据那些发生了变化然后存放起来。
+			public static string ToFindDifferent<T>(T newModel, T oldModel)  //泛型和反射使用例子
+			{
+				string result = string.Empty;
+				//get all public property
+				var properties=typeof(T).GetProperties(BindingFlags.Instance|BindingFlags.Public);
+				//bool flag = true;
+				foreach (var prop1 in properties)
+				{
+					//判断 newModel 和 oldModel 对象是否值是一致，
+					if (prop1.GetValue(newModel,null).ToString() != prop1.GetValue(oldModel,null).ToString())
+					{
+						//如果不一致把不一致的组织成为字符串返回回来。
+						var type = prop1.Name;
+						result += type+":";
+						var oldValue = prop1.GetValue(oldModel, null).ToString();
+						result += "原始数据" + oldValue;
+						var newValue= prop1.GetValue(newModel, null).ToString();
+						result += "修改为" + newValue +" " ;
+					}
+
+				}
+				//返回两个对象不一致的数据
+				return result;
+			}
+			
+	
+	
+===========语法糖
+C#语法糖汇总：
+1.简化过的Property
+	声明Property的方法可以这样，public string MyName{get;set;} 我们也可以单独给get或set设定访问限制符。
+2.经过两次变异的委托写法：
+	复习Lambda表达式、委托和匿名委托
+3.集合类的声明：
+	List<string> list=new List<string>{"ddd","ccc"};
+4.集合类各个项的操作：
+	对于上面的声明下面提供简单的打印方法：
+	list.ForEach(a=>Console.WriteLine(a)); //就可以把list中所有的数据打印出来。 
+5.using == try finally
+	使用完毕时释放资源，使用using ,using 实质就是try finnaly的一个语法糖而已。
+	例如：
+		StreamWriter sw=null;
+		try
+		{
+			sw=new StreamWriter("D:\**.txt");
+			sw.WriteLine("test");
+		}
+		finally
+		{
+			if(sw!=null)
+			sw.Dispose();
+		}
+	上面这段代码简化使用using化简：
+	using (var sw = new StreamWriter("D:\**.txt"))
+	{
+		sw.WriteLine("test");
+	}
+6.可爱的var
+var，编译器会根据后面对var的赋值判断它的类型，var的类型一旦确认就不能改变，他只能作为局部变量使用，不能为字段和参数声明。
+7.问号的演变：
+?:这是一个三元表达式。
+两个问号??，表示左边的变量如果为null则值为右边的变量，否则就是左边变量值。
+8.类型实例化的语法糖：
+
+9.传说中的扩展方法：
+可以在不修改源代码的情况下给类增加实例方法。
+10.使用匿名类
+
+
+
+================多线程
+线程是程序中的一个执行流。不同的线程可以执行同样的函数。
+多线程指程序中包含多个执行流，单个程序可以创建多个并行执行的线程完成各自任务。
+线程不利方面：
+	内存占用，多线程需要协调和管理，所以需要CPU时间跟踪线程。线程对共享资源的访问相互影响，解决竞用共享资源的问题。线程太多，控制太复杂。
+Thread类有几个关键方法：
+	Start():启动线程；
+	Sleep(int):静态方法，暂停当前线程指定的毫秒数；
+	Abort():终止一个线程；
+	Suspend():不终止线程，仅仅挂起线程，该线程可以恢复。
+	Resume():恢复被Suspend()挂起的线程
+	Join():使主线程等待，直到某一线程执行结束
+当Abort()方法终止了线程，该线程无法被恢复。
+一个线程是在Running状态下调用Start()方法
+主线程Mian()函数：所有的线程都是依附在Main()函数所在的线程。起始线程可以称为主线程。只有所有线程都终止那么主线程才能终止。
+ThreadState 属性的取值如下：
+	Aborted：线程已停止；
+	AbortRequested：线程的Thread.Abort()方法已被调用，但是线程还未停止；
+	Background：线程在后台执行，与属性Thread.IsBackground有关；
+	Running：线程正在正常运行；
+	Stopped：线程已经被停止；
+	StopRequested：线程正在被要求停止；
+	Suspended：线程已经被挂起（此状态下，可以通过调用Resume()方法重新运行）；
+	SuspendRequested：线程正在要求被挂起，但是未来得及响应；
+	Unstarted：未调用Thread.Start()开始线程的运行；
+	WaitSleepJoin：线程因为调用了Wait(),Sleep()或Join()等方法处于封锁状态；
+线程优先级：线程5个优先级，Hightest、AboveNormal、Normal、BelowNormal、Lowest
+	为一个线程指定优先级通过myThread.Priority=ThreadPriority.Lowest
+	
+	多线程例子1：
+	ParameterizedThreadStart ps = new ParameterizedThreadStart(function); //创建托管线程 ，function为该线程执行的方法void。
+    Thread thd = new Thread(ps);   //创建一个新线程, 执行方法通过线程托管传递给thd新线程。
+    thd.Start(arg); //开始执行这个新线程
+    例子里简写： Thread newThread = new Thread(new ParameterizedThreadStart(function));
+	例子1:
+	System.Threading.Thread thread = new System.Threading.Thread(new System.Threading.ThreadStart(LdapRetrive)); //定义一个线程，处理LdapRetrive()
+    thread.Start(); //线程开启，执行LdapRetrive()函数
+	定义处理函数void LdapRetrive(){} //这个处理函数是一个无返回值的参数
+------------多线程解决生产者消费者问题。同步  20120725
+	避免几个线程同时执行一个函数，造成的数据混乱
+	lock关键字。一个时间内值允许一个线程进行执行，其他线程必须等待。lock(expression) statement_block
+	expression代表你希望跟踪的对象，通常是对象引用。
+		如果你想保护一个类的实例，一般地，你可以使用this；		如果你想保护一个静态变量（如互斥代码段在一个静态方法内部），一般使用类名就可以了。
+	生产者、消费者问题。最简单的一个库存。
+	生产者一个线程，向库存写入数据。
+	消费者一个线程，从库存中读取数据。
+	现在又两个线程可能同时操作一个数据，为了避免这样的操作导致数据错误。解决方法，使用同步（即同一个时间内只有一个线程操作数据。）
+	使用标志位和互斥锁完成。当生产者获取排斥锁，同时标识位为写入，那么就可以给库存赋值。完成操作使用Monitor.Pulse(...),只有锁的当前所有者可以使用Pulse向等待对象发出信号，同时释放锁，下一个就绪队列中的线程就会获得该锁
+	
+	
+------------多线程学习总结 20120725
+	多线程：实现多个指令序列并发运行。
+	线程太多，导致线程切换开销就会显著影响性能。
+	线程要求：1 .原子性，线程原子性可避免死锁同时避免不确定性。2. 避免死锁
+	System.Threading.Tasks.Task类代表一个一步操作
+	Task task = new Task(Action) //可以是方法也可以是一个lambda表达式。
+	task.Start();
+	task.Wait();  //等待task任务执行完成。
+	--------
+	Task<string> task = Task.Factory.StartNew<string>(Action)  //创建并启动一个线程。线程执行完成task.IsCompleted = true; 否则为false。
+	--------
+	ContinueWith(),将任务链接起来。 task.ContinueWith(Action);
+	Task执行期间的未处理的异常会被禁止。
+	取消任务：
+	CancellationToken，注意： 1. 取消标志。
+							  2. 复制的，会创建标志的一个副本。
+	---------
+	长时间运行的任务。
+	Task是对操作线程的抽象，高效管理线程。
+	Task task = Task.Factory.StartNew(()=>
+	{
+		Action,TaskCreationOptions.LongRunning    //其中的TaskCreationOptions.LongRunning指定长时间运行的任务。
+	});
+	--------
+	并行迭代：
+	主要思想： 将要计算分解成多个独立的部分，最后把所有结果和到一起。   参数计算位数(BatchSize)，参数的起始位(i*BatchSize)
+	爬山算法：不断的创建附加线程，直到附加线程的开销开始照成总体新能的下降。
+	并行度： 最高效的线程数目。
+	 var options = new ParallelOptions { MaxDegreeOfParallelism = 4 };  //指定最大处理核心数量
+	Parallel.For(0,iterations,options,
+		lambda表达式表示需要执行的代码);
+	);
+	Parallel.ForEach();//用法同上
+	取消并行循环，CancellationTokenSource
+	--------
+	并行执行LINQ查询
+	没有并行查询： data.Select(投射条件);
+	并行查询： data.AsParallel().Select(投射条件);   //可用于 筛选Where(),投射Select(),链接，分组，聚合运算符。
+	
+	--------
+	线程池
+	访问ThreadPool中的线程，只要通过静态方法 QueueUserWorkItem()来调用。
+	ThreadPool.QueueUserWorkItem(DOWork,'.'); //DOWork()放入线程池中的方法，后面'.'传入的参数。
+    ThreadPool.QueueUserWorkItem(new WaitCallback(DBVisit), item);//创建新线程访问数据库
+	定义DOWork方法 public static void DOWork(object state) { }
+	-------
+	选择异步类时优先顺序高到底 Task、ThreadPool、Thread 。 Thread有Thread.Sleep(),其他连个方法不具备
+	///让操作message的线程处于阻止状态。
+	private void SleepTillMoreMessagesQueued()
+	{
+		lock(message)   //锁定线程操作的对象
+		{
+			Monitor.Wait(message); //释放对象上的锁并阻止当前线程。
+		}
+	}
+	
+	private void WakeUpThread()
+	{
+		lock(message) //锁定对象
+		{
+			Monitor.PulseAll(message);  //唤醒沉睡中的线程，通知所有等待线程对象的状态更改。
+		}
+	}
+	
+	
+	
+	
+=============异步
+
+------------异步Ping其他机器小实例。
+	Ping ping = new Ping();
+	ping.SendAsync(IPAddress,Int32,Object) //尝试异步方式向指定的IPAddress的计算机发送Internet控制消息协议(ICMP)会送消息，并从该计算机接收相应的ICMP会送答复消息。
+------------试着启动一个进程
+	System.Diagnostics.Process.Start() //详细差MSDN
+------------异步访问web页面
+	void Execute()
+	{
+		//构建HttpWebRequest对象
+		HttpWebRequest request = (HttpWebRequest)WebRequest.Create(item.Config);
+		request.Timeout = int.Parse(ConfigurationManager.AppSettings["WebTimeOut"]);
+		//构建WebRequestItem对象，将监控对象与HttpWebRequest包含在其中
+		WebRequestItem webItem = new WebRequestItem { Item = item, httpRequest = request }; //这个WebRequestItem 对象自己构件。
+		//异步访问页面
+		IAsyncResult result = request.BeginGetResponse(new AsyncCallback(IGetResponse), webItem); //异步访问，并将webItem参数传递给异步回调函数IGetResponse(IAsyncResult)
+	}
+	void IGetResponse(IAsyncResult result)
+    {
+		//获取传入的WebRequestItem对象
+		WebRequestItem webItem = (WebRequestItem)result.AsyncState;
+		//获取WebRequestItem对象中的HttpWebRequest请求
+		HttpWebRequest request = webItem.httpRequest;
+		//异步访问页面
+        HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(result);
+		if (response.StatusCode == HttpStatusCode.OK)  //能够成功访问
+		{
+			//TODO:
+		}
+	}	
+==============事件
+-------------事件的几个部件
+	1.定义事件，可以自定义事件参数。
+	2.定义委托
+	3.事件的类或包含触声明一个事件、触发事件方法。这里面定义事件
+	4.事件要处理的方法或类中的方法。
+	5.主调函数用于调用触发事件的方法和传递参数。
+
+-------
+子用户控件里面“自定义事件”，事件挂载在父页面上。使用方法
+	(1.) public delegate void SelectWorkHandler(int ID, string Name, string Month);  //定义一个委托类，这个委托类里面已经定义了该事件传的数据和数据类型。
+	(2.) public event SelectWorkHandler SelectWorkEvent; //在需要使用这个
+	事件的时候实例化一个事件对象。
+	(3.) protected void labDetial_Click(object sender, EventArgs e)  //例如，页面的点击事件触发这个事件。
+        {
+            if (SelectWorkEvent != null)
+            {
+                SelectWorkEvent(this.WorkID,this.Name,this.Month); //给事件对象赋值
+            }
+        }
+	(4.) <uc1:uc_CheckWork ID="uc_CheckWork1" runat="server" OnSelectWorkEvent="uc_CheckWork1_Select" />  //在父页面aspx挂载事件，事件名称自取(父页面中)
+	(5.) public void uc_CheckWork1_Select(int ID, string Name, string Month){//TODO:} //在父页面定义这个事件的处理方法(父页面中)
+	---------使用“.NET Framework”自带事件
+	(1.) public event EventHandler SelectedNodeChangedEvent;//在需要使用事件的时候实例化一个事件对象
+	(2.) 在给事件传参数的时候需要传入一个对象和一个EventArgs对象。//
+		SelectedNodeChangedEvent(org, new EventArgs());//如果没有EventArgs参数就传入一个空的参数。
+	(3.) 挂在事件方法，同上
+	(4.) 定义事件处理方法，函数带有两个对象，object sender,EventArgs e
+	----------两个类之间挂载事件
+		---主调函数指定两个类之间的关系
+				My m = new My();
+				MyEVENT me = new MyEVENT();
+				m.Myevent += me.Myevent;
+				m.Test();           
+				Console.ReadLine();
+		---定义事件委托，并负责触发事件
+		class My
+		{
+			public delegate void mytest(string a);
+
+			public event mytest Myevent;
+
+			public void Test()
+			{
+				
+				if (Myevent != null)  //在这里触发事件之前对Myevent进行检查，可以避免NullReferenceException的发生。（调用一个委托之前，要检查它的值是不是空值。）
+				{
+					Myevent("a");
+				}
+			}
+		}
+		---定义事件处理方法
+		class MyEVENT
+		{
+			public void Myevent(string a)
+			{
+				Console.WriteLine("aaa");
+			}
+		}
+
+		
+	---------C#本质论，事件
+	**多播委托编码Observer模式，如果一个方法的一个方法执行触发多个类中的相应的方法执行，为了降低类之间的耦合性所以采用事件方法，把这些需要执行的方法都由同一个发布者订阅需要执行的事件。（参考：P381）
+	
+	---------声明泛型委托：
+	使用泛型，就可以在多个位置使用相同的委托数据类型，并在支持多个不同的参数类型的同时保持强类型。
+	public deleagate void EventHandler<T>(object sender,T e)
+		where T : EventArgs;
+	
+
+
+=============Repeater控件
+	Repeater控件里面包含UserControl控件，不能直接通过Repeater控件找到他里面的数据。
+	foreach (System.Web.UI.WebControls.RepeaterItem c in Repeater控件ID.Items)
+    {//TODO: 取得里面的数据}
+
+	
+====================基本数据类型
+--------------时间类型
+--------------获得某一个月的天数，然后转化为时间
+GregorianCalendar gc = new GregorianCalendar();
+int year = Convert.ToInt32(ddlCreateMonth.Text.Substring(0, 4));
+int month = Convert.ToInt32(ddlCreateMonth.Text.Substring(5,2));
+int days = gc.GetDaysInMonth(year, month);
+item.PlanTime = Convert.ToDateTime(year+"-"+month+"-"+days);
+	
+--------------保留有效数字
+保留数据位数，例如：string.Format("{0:N2}",4.5545); //表示保留小数点的后两位
+			  保留小数点的位数(m位)只用修改上面表达式中0:Nm
+	方法二：
+	double s=xxx.xxx;
+	s.ToString("#0.00");
+
+============14.支持标准查询运算符的集合接口和15使用查询表达式LINQ
+------------Where()方法依据谓词来判断筛选条件。
+------------Select()投射，System.Linq.Enumerable.Select()。可以在这个集合的基础上再调用另一个标准查询运算符。
+1. 匿名类型，该类型最终由编辑器声明
+------------a.声明一个匿名类型。
+	var patent1 = new {Title="aaa",YearOfPublication="1900"}
+-----------b.使用已近声明的匿名类型
+	console.write(patent1.Title,patent1.YearOfPublication);
+匿名类型没有名称的，匿名类型类型声明使用var
+2. 集合初始化器
+------公开枚举器，该枚举器支持非泛型集合上进行简单迭代。
+private static Print<T>(IEnumerable<T> items){
+	foreach(T item in items){
+		Console.WriteLine(item);
+	}
+}
+-----标准查询符。
+	1. System.Linq.Enumerable.Where()
+	Where() 依据"谓词"筛选条件。Where输出的的是一个新的IEnumerable<T>，所以可以在这个集合基础上再调用另一个标准查询运算符。
+	Where() 在“垂直”方向筛选一个集合（减少集合中项目的数量）。Select() 在“水平”方向上缩减集合的规模（减少列的数量）或对数据进行彻底转换。
+	AsParallel() System.Linq.ParallenEnumerable,遍历数据和返回结果并行执行。   问题，引入竞态条件，（线程之间操作干扰），解决方法，向多个线程共享访问的数据应用同步机制，必要时强迫操作原子性。
+	Count(),计算集合条数。
+	Any(),尝试遍历集合中的一个项，返回ture,false
+	OrderBy()和ThenBy() 排序，
+		OrderBy(),Lambda表达式，该表达式表示了要据此进行排序。
+		ThenBy(),Lambda表达式，指定额外的排序条件。
+	 ——————————
+	 IEnumerable<Patent> items;
+	 Patent[] patent=PatentData.Patents;
+	 items=patent.OrderBy(patent => patent.YearOfPublication).ThenBy(patent => patent.Title);
+--------联接操作(join)
+	Join实现内部联接。操作两个关系性集合。
+	public class Department{   //定义部门子对象
+		public long Id{get;set}
+		public string Name{get;set;}
+	}
+	public class Employee{   //定义用户之对象，包含Department的主键id
+		public int Id{get;set;}
+		public string name{get;set;}
+		public int DepartmentId{get;set;}    //Department的主键id
+	}
+	public static class CoporateDate{
+		public static readonly Department[] Departments=new Department[]{ new Department(){Name="Scal",id=0}}  //构建Departments集合
+		
+		public static readonly Employee[] Employees=new Employee[]{ new Employee(){Name="dapeng",id=0,DepartmentId=0}}  //构建Departments集合
+	}
+	
+	class Program{
+		static void Main(){
+			Department[] departments=CoporateDate.Departments; //获得Department对象集合
+			Employee[] employees=CoporateDate.Employees;    //获得Employee对象集合
+			var items=employees.Join(
+				departments,       //连接到的目标集合
+				employee => employee.DepartmentId, //outerKeySelector
+				department => department.Id,
+				(employee,department)=>new {      //每一个employee.DepartmentId==department.Id;
+					employee.Id,
+					employee.name
+				}
+			);
+			//TODO:输出itmes，或者操作items。
+		}
+	}
+	
+-----------两个不同类型集合的交集，通过两个集合中的共有字段Piority和CustomCallerID
+	具体使用方法，下面是可能使用到的类。
+		var list = cc.Join(ccmms,               //join()，第一参数是inner，指定ccmms和cc要链接到的目标集合。
+                    s1 => new KeyTemp { Piority = s1.Priority, CustomCallerID = s1.CustomerCallerID },   //本句和下面一句表明他们是通过那两个键进行求交集的
+                    s2 => new KeyTemp { Piority = s2.Priority, CustomCallerID = s2.CustomerCallerID },
+                    (s1, s2) => s1,
+                    new KeyTemp()).ToList();
+	--定义一个类，用于完成这样的查询。上面是使用方法。				
+public class KeyTemp:IEqualityComparer<KeyTemp>
+{
+	public int Piority     //定义类中的属性
+	{
+		get;
+		set;
+	}
+
+	public int CustomCallerID    //定义类中的属性
+	{
+		get;
+		set;
+	}
+
+	#region IEqualityComparer<KeyTemp> 成员
+
+	public bool Equals(KeyTemp x, KeyTemp y)  //调用Equals完成比较，找到相同的数据
+	{
+		return (x.CustomCallerID == y.CustomCallerID) && (x.Piority == y.Piority);   //重写对象中判断两个对象是否相等的方法
+	}
+
+	public int GetHashCode(KeyTemp obj)
+	{
+		return (obj.Piority << 15) | (obj.CustomCallerID); //1; //返回一个固定值。
+	}
+
+	#endregion
+}	
+-------------GroupBy分组结果
+	GroupBy(),Lambda表达式，指定据此进行分组。
+	GroupJoin(),实现外部联接。
+	SelectMany(),实现外部联接。（整合成为一个数据，返回） 与Select()的区别，Select()获得最后是一个数组，而SelectMany()会整合成为一个集合。
+	Select(),会返回多个数组。
+	OfType<T>,构造查询一个集合，只返回特定的数据类型，如list.OfType<int>()
+	Union(),合并两个集合，不包含重复的项。
+	Concat()，合并两个集合，包含重复项。
+	Intersect(),结果集合中，填充两个原始集合都有的项。（求交集）
+	Distinct(),筛选集合中重复的项，使结果不重复。
+	SequenceEquals(),比较两个集合，返回两个集合是否一样。
+	Reverse(),集合反转。
+-----------System.Linq.Enumerable，聚合函数。
+	Count(),集合项数。
+	Average(),数值集合平均数。
+	Sum(),数值集合求和。
+	Max(),数值集合最大值。
+	Min(),数值集合最小值。
+
+	查询表达式，以“from” 开始，以“select”或“groupby”结束
+	string[] keywords={.....};
+	IEnumerable<string> selection = from word in keywords
+									where word.Contains('a');
+									select word;     //word 范围变量，代表集合中每一项。
+
+
+
+	--select 延时查询
+	var selection =
+			from cm in ccmms  //ccmms 是一个List<> 对象
+			group cm by cm.CustomerCallerID == li.CustomerCallerID && cm.Priority == li.Priority  //可以对里面的每一条的每一个属性比较
+				into groups                      //into 延时查询， 查询出来的结果被分为两组一组是能匹配上的true，另一组是不能匹配上的false
+				select new
+				{
+					s = groups.Key,   //这里存放的分组的内容，更具group...by 存放true或false
+					items = groups
+				};
+					
+
+------------筛选
+	使用"where"子句筛选。
+	var MMSCode =
+			from c in cc
+			where isMMSCodeHasListCode(list, ccmms)   //使用where筛选，这里的isMMSCodeHasListCode一个函数，返回true或false
+			select c;
+				
+	var SMSCode =
+			from c in cc
+			where list.Contains(c) == false  //使用where筛选，判断list.Contains(c) list对象是否包含cc中的数据。返回true或false
+			select c
+------------排序
+	orderby() 排序
+	如果重复调用orderby()，只有最后一个orderby()的keyselector才真正起作用。那没为了在orderby()的基础上指定额外的排序使用ThenBy()
+------------let 子句
+	let避免多余的实例化
+------------分组
+	groupby()分组
+------------查询延续
+	into，范围变量。
+------------查询表达式作为方法调用。
+
+------------GroupJoin() 实现一对多的关系
+需求：查找一个部门下属的所有员工的集合。
+	Department[] departments = 集合 ;
+	Employee[] employees = 集合 ;
+	var items = departments.GroupJoin(
+		employees,
+		department =>department.Id,
+		employee => employee.Id,
+		(department,departmentEmployees)=>new{
+			department.Id,
+			department.Name,
+			Employees=departmentEmployees
+		}
+	);
+
+----------Linq 查询数据的，求并集、交集、差集、最大值、最小值、平均值
+	int[] a = { 1, 2, 3, 4, 5, 6, 7 };
+    int[] b = { 4, 5, 6, 7, 8, 9, 10 };
+    int[] c = { 1, 2, 3, 3, 4, 1, 2, 4, 6, 1, 6, 5 };
+
+    // 交集
+    var fuck = a.Intersect(b);
+
+    // 并集
+    var shit = a.Union(b);
+
+    // a有b没有的
+    var diff1 = a.Except(b);
+
+    // b有a没有的
+    var diff2 = b.Except(a);
+
+    var max = a.Max();
+    var min = a.Min();
+    var avg = a.Average();
+    var dis = c.Distinct();  //降序排列。
+---------------------2012/08/15 Linq查找并集，差集，交集,最值,平均,去重复）
+	1. 现在有两个集合A、B。   var c = A.Intersect(B) //找到集合A和集合B的交集
+	A.Except(B) //A集合去除集合B剩余的数据。
+	A.Union(B) //A集合和B集合并集合
+	
+	-------------支持标准查询运算符的集合接口
+	//公开枚举器，公用的方法枚举类型
+	void Print<T>(IEnumerable<T> items)
+	{
+		foreach(T item in items)
+		{
+			Console.WriteLine(item);
+		}
+	}
+	
+	-------------栈的实现。(先入后出)
+	System.Collections.Generic.Static<int> stack = new System.Collections.Generic.Stack<int>();
+	while(stack.MoveNext())  //MoveNext(),方法在越过集合末尾之后返回false;
+	{
+		......
+	}
+	//把这个堆栈转换成为一个可循环的集合的枚举数方法，。---> Enumerator enumerator = stack.GetEnumerator();
+	
+--------------
+	Linq to SQL
+--------------
+高级查询方法，聚合类 Count,Max/Min,Average
+			  排序类 ThenBy
+			  分区类 Take,TakeWhile,Skip,SkipWhile
+			  集合类 Distinct
+			  生产类 Range,Repeat。Range只能产生整数序列。Repeat可以产生泛型序列。
+			  
+			  
+			  
+	
+==============反射Reflection
+T:泛型 传入一个泛型类型，通过下面的反射得到该泛型的所有Public属性。
+	var properties=typeof(T).GetProperties(BindingFlags.Instance|BindingFlags.Public);
+	----根据传入的数据非泛型，利用反射得到该实体所有字段名称。
+	PropertyInfo[] proCollection = 实体对象.GetType().GetProperties();
+	properties[i].GetValue(newModel,null)//同坐这样取得对应属性的值。
+	proCollection[i].GetValue(xx,null) //同上功能
+	
+	----------获取泛型的类型
+	Type type = Acrivator.CreateInstance<T>(); //使用无参数构造函数，创建指定泛型类型参数所指定类型的实例。
+	System.Reflection.PropertyInfo pro = tp.GetProperty(node.Attributes["field"].Value); //发现属性的属性并提供对属性的访问。
+    pro.SetValue(arg, ConvertString(row[colName].ToString(), pro), null); //将给定对象的属性设置为定值。
+
+
+==============缓存
+	ArrayList myarray=new ArrayList();
+	myarray.Add(object value); //这里面存入你需要加入的数据
+	Cache.Add(string key,       //用于存放键值，使用 Cache["键值"] 可以获取该值。必须唯一的。
+			  object value,     //需要缓存的数据这里是myarray
+			  CacheDepency dependencies,     //缓存依赖项，此项更改意味着缓存内容已经过期。如果没有依赖项，此项为null
+			  Datetime absoluteExpiration,         //表示缓存过期的时间
+			  TimeSpan slidingExpiration,       //表示缓存将在多长时间后被删除
+			  CacheItemPriority,  //枚举类型，指明该缓存在垃圾回收的时候是否容易被回收程度。
+			  CacheItemRemoveCallback   //缓存删除数据对象时调用的事件，一般用做通知程序。
+			  );
+	Cache类的主要方法，Add，数据添加到Cache对象中
+	Insert 向Cache中插入数据项，可以用于修改已经存在的数据
+	Remove 移除Cache对象中的缓存数据项
+	Get 从Cache对象中获取指定的数据项，返回是Object，需要类型转换
+	GetType 从Cache对象获取数据项的类型，方便进行转换。
+	GetEnumerator 循环访问Cache对象中的缓存数据项。 返回类型是“IDictionaryEnumerator”
+CacheDepency：缓存依赖类，当缓存对象的实际数据发生变化时，及时通知缓存更改里面数据。
+--------------数据库缓存依赖
+http://www.cnblogs.com/lsjwzh/archive/2008/08/25/1275809.html
+1. 启用数据库缓存。VS命令提示：输入： aspnet_regsql.exe -S  172.28.19.40  -U 'sa' -P 'windows' -ed -d db_dataBase(替换启用的数据库名称) -et -t tb_Table(替换启动的数据库表名称)
+2. 配置Web.Config数据。
+3. 向特定数据显示控件指定数据源。
+4. 页面添加缓存依赖。
+这种情况下，只有在数据库的内容发生了改变才能触发执行页面的Page_Load事件
+	
+====================Windows服务程序
+----xxx.bat安装windows服务
+1. 安装windows服务程序，windows 的 xxx.bat程序为windows的自动运行程序。
+2. 在xxx.bat文件中 %SystemRoot% 默认是C:/Window 目录
+----xxx.bat卸载windows服务
+"%SystemRoot%\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe" /u F:\Working\四川航空电子客票服务\Source\Scal.ETS.Auto.CopyData\bin\Debug\Scal.ETS.Auto.CopyData.exe
+----cmd安装windows服务
+进入cmd下面，C:\Windows\Microsoft.NET\Framework\v4.0.30319\InstallUtil.exe "F:\Working\四川航空电子客票服务\Source\Scal.ETS.Auto.CopyData\bin\Debug\Scal.ETS.Auto.CopyData.exe"
+---cmd卸载windows服务
+
+===================C# HashSet
+HashSet<int> HashIDs = new HashSet<int>();   //HashSet 里面是int或long
+对于int类型可以直接加入到HashSet中。
+如：HashIDs.Add(一个int数值);
+对于两个HashSet对象，HashSourceIDs和 HashDestinationIDs
+HashSourceIDs.ExceptWith(HashDestinationIDs); //执行结果，HashSourceIDs和HashDestinationIDs的差集
+
+------HashSet使用
+	需求：对象存放进入HashSet方法中，可以快速在查询HashSet中是否存在该数据。
+	class CityLine
+	{
+		public int ID { get; set; }
+		public string OrgCity { get; set; }
+        public string DesCity { get; set; }
+	}
+		
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			var s1 = new CityLine { ID=1, DesCity = "PEK", OrgCity = "CTU" };
+            var s2 = new CityLine { ID=0, DesCity = "PEK", OrgCity = "CTU" };
+			HashSet<CityLine> hash = new HashSet<CityLine>();
+            hash.Add(s1);
+            var tr=hash.Contains(s2);  //此时返回为False
+		}
+	}
+	
+	====>>修改之后
+	class CityLine
+	{
+		public int ID { get; set; }
+		public string OrgCity { get; set; }
+        public string DesCity { get; set; }
+		
+		public override int GetHashCode()
+		{
+			return string.Format("OrgCity_{0},DesCity_{1}", OrgCity, DesCity).GetHashCode();
+		}
+		
+		public override bool Equals(object obj)
+		{
+			return true;
+		}
+	}
+		
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			var s1 = new CityLine { ID=1, DesCity = "PEK", OrgCity = "CTU" };
+            var s2 = new CityLine { ID=0, DesCity = "PEK", OrgCity = "CTU" };
+			HashSet<CityLine> hash = new HashSet<CityLine>();
+            hash.Add(s1);
+            var tr=hash.Contains(s2);  //此时返回为True,因为重写了GetHashCode方法,同时重写了Equals方法。
+		}
+	}
+
+==================C# 事务,SqlBulkCopy数据库大批量数据快速拷贝
+------------------SqlBulkCopy使用心得
+1. 指定目标数据库
+        #region SqlBulkCopy 不带事务范例
+        public static void ExecuteBulkCopy(string connectionString, DataTable sourceTable, string destinationTable)   
+        {
+            using (SqlConnection sqlconn = new SqlConnection(connectionString)) 
+            {
+                sqlconn.Open();
+                using (SqlBulkCopy sbc = new SqlBulkCopy(sqlconn)) 
+                {
+                    sbc.BatchSize = 1000;
+                    sbc.BulkCopyTimeout = 180;
+                    //将DataTable表名作为待导入库中的目标表名   
+                    sbc.DestinationTableName = destinationTable;
+                    //将数据集合和目标服务器库表中的字段对应 
+                    for (int i = 0; i < sourceTable.Columns.Count; i++)
+                    {
+                        sbc.ColumnMappings.Add(sourceTable.Columns[i].ColumnName, sourceTable.Columns[i].ColumnName);  //列映射定义数据源中的列和目标表中的列之间的关系
+                    }
+                    sbc.WriteToServer(sourceTable);   //写入数据库程序
+                }
+                sqlconn.Close();
+            }
+        }
+        #endregion
+
+        #region SqlBulkCopy 带有事务范例
+        public static void ExecuteBulkCopy(SqlTransaction trans, DataTable sourceTable, string destinationTable)
+        {
+            using (SqlBulkCopy bulkCopy = new SqlBulkCopy(trans.Connection, SqlBulkCopyOptions.KeepIdentity, trans))
+            {
+                bulkCopy.BatchSize = 1000;
+                bulkCopy.BulkCopyTimeout = 180;
+                //将DataTable表名作为待导入库中的目标表名 
+                bulkCopy.DestinationTableName = destinationTable;
+                //将数据集合和目标服务器库表中的字段对应  
+                /*for (int i = 0; i < sourceTable.Columns.Count; i++)
+                {
+                    //列映射定义数据源中的列和目标表中的列之间的关系
+                    sbc.ColumnMappings.Add(sourceTable.Columns[i].ColumnName, sourceTable.Columns[i].ColumnName);
+                }*/
+                SqlBulkCopyMapping(bulkCopy);
+                try
+                {
+                    bulkCopy.WriteToServer(sourceTable);
+                    trans.Commit();   //执行完成提交事务
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    trans.Rollback();   //执行失败回滚事务
+                }
+            }
+        }
+		
+-----------------(Linq把一个List对象转换成为DataTable对象)然后很多时候操作的是IEnumerable集合，这就需要一个IEnumerable到DataTable的接口
+        public static DataTable LinqToDataTable(IEnumerable list)
+        {
+            DataTable table = new DataTable();
+            bool schemaIsBuild = false;
+            PropertyInfo[] props = null;
+            foreach (object item in list)
+            {
+                if (!schemaIsBuild)
+                {
+                    props = item.GetType().GetProperties();
+                    foreach (var pi in props)
+                        table.Columns.Add(new DataColumn(pi.Name, pi.PropertyType));
+                    schemaIsBuild = true;
+                }
+                var row = table.NewRow();
+                foreach (var pi in props)
+                    row[pi.Name] = pi.GetValue(item, null);
+                table.Rows.Add(row);
+            }
+            table.AcceptChanges();
+            return table;
+        }
+=====---------DataTable的操作
+DataTable数据排序
+	DataRow[] rows = dataTable1.Select("", "[字段] asc");
+	DataTable t = DataTable1.Clone();
+	t.Clear();
+	foreach (DataRow row in rows)
+		t.ImportRow(row);
+	DataTable1 = t;
+
+DataTable 通过DataTable中的DataRow查找到对应的DataTable
+	dataRow.Table  //通过DataRow 查找到对应的Table
+	dataRow.Table.Columns  //通过DataRow查找到Table中对应的行
+
+修改DataTable列名
+DataTable.Columns[1].ColumnName="XXX";//名字自定
+
+修改DataTable某一列的类型和记录值	
+	步骤1.克隆表结构，2.修改列类型，3.修改记录纸，4.返回结果
+	private DataTable UpdateDataTable(DataTable argDataTable)
+        {
+            DataTable dtResult = new DataTable();
+            //克隆表结构
+            dtResult = argDataTable.Clone();
+            foreach (DataColumn col in dtResult.Columns)
+            {
+                if (col.ColumnName == "结果")  //原有的DataTable中此列为Int32类型，修改此列类型为String类型
+                {
+                    //修改列类型
+                    col.DataType = typeof(String);
+                }
+            }
+            foreach (DataRow row in argDataTable.Rows)
+            {
+                DataRow rowNew = dtResult.NewRow();
+                rowNew["IP"] = row["IP"];
+                rowNew["IP归属地"] = row["IP归属地"];
+                //修改记录值
+                rowNew["结果"] = row["结果"].ToString() == "0" ? "禁止访问" : "恢复访问";
+                rowNew["IP每秒访问次数"] = row["IP每秒访问次数"];
+                rowNew["备注"] = row["备注"];
+                rowNew["操作时间"] = row["操作时间"];
+                rowNew["操作人"] = row["操作人"];
+                dtResult.Rows.Add(rowNew);
+            }
+            return dtResult;
+        }
+
+		
+		
+		
+		
+		
+		
+		
+
+		
+		
+		
+		
+		
+		
+
+================WebForm开发技巧
+1. WebForm里面的任何事件响应都会首先触发 Page_Load事件，然后再去触发响应的控件事件。
+一般在Page_Load事件如下处理   
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!Page.IsPostBack)
+        {
+            #region 初始化数据模板  //这样就可以避免在响应页面事件的时候重新去初始化模板。
+            BindTemplate();
+            #endregion
+        }
+    }
+	
+2. 如果WebForm中有asp:控件需要响应控件事件，需要在控件上面加上AutoPostBack="true"  允许控件响应回发。
+---在属性里面换行
+labTitle.Text = value.ToString().Trim().Replace(System.Environment.NewLine,"<br />");
+------使用DataGrid控件
+	如果DataGrid中使用模版列，此时模版列中点击模版按钮弹出确认框。
+	模板列中的LinkButton ：<asp:LinkButton ID="ObsoleteData" runat="server" CommandName="DeleteData" CommandArgument='<%# Eval("ID") %>'>作废上传数据</asp:LinkButton>
+	在后台cs文件中的DataGrid_ItemDataBound(object sender, DataGridItemEventArgs e) 方法中使用
+	((LinkButton)e.Item.FindControl("ObsoleteData")).Attributes.Add("onclick", "return confirm('是否作废数据？');");  //这样就给每一个LinkButton添加了一个提示框。
+	页面后台请求需要被重定向一下，同时也是刷新一下页面。
+	Response.Redirect(Request.Url.ToString()); //表示通知浏览器需要刷新本页
+
+----------后台调用前台代码的实现。
+方法一：
+	1.后台要被调用的函数ss()
+	public string ss()
+	{
+	return("a");
+	}
+	2.前台js调用示例：
+	＜script language=javascript＞
+	var a = "＜%=ss()%＞";
+	alert(a);
+	＜/script＞
+方法二：
+	1.前台放置一个按钮，设置为隐藏。注意：不能直接设置Visible=false的方式，这样的话在ASP.Net 2.0编译后的代码里是找不到这个按钮的。需要设置风格：style="display:none;"
+	2.双击按钮，让按钮产生事件
+	3.前台js调用，模拟按钮的点击事件，触发后台方法。
+	document.getElementById("button").click();
+	
+	
+
+===================序列化对象
+序列化，把对象放到文件中，比如报一个对象序列化成XML格式的文件。
+DataTable可以序列化。。条件是TableName不能为空
+反序列化，把XML反序列化成一个对象。
+
+
+===================经典错误收集
+1. 如果新添加向与原本使用项.NETFramework的框架使用版本不一致，会导致引用出问题。
+
+
+
+==================C#本质论：数据类型
+null 意味着变量为任何值，而""意味着变量有一个值（一个控制符串）
+值类型：数据总是被值复制。
+引用类型：数据总是被引用复制。
+checked块，如果赋值发生溢出异常就会引发system.overflowException异常
+unchecked块，直接的处理溢出后的值，不会引发异常。
+int.Parse(xx)提供数据类型转换
+int.TryParse(xx)尝试转换，不会引发异常，例如：double.TryParse(input,out result) //out result 作为返回数据，如果转换成功那么返回True，否者返回false。
+continue，结束当前循环，开始执行下一个循环。
+-------------------类型转换。WebService 接口
+	当发布一个webservice接口，此时我在webservice中的方法使用对象来传递数据。那么webservice会自动生成一个属于这个webservice的中间代理类。导致==>传入参数类型不匹配。
+	解决办法：
+		 System.Web.Script.Serialization.JavaScriptSerializer s = new System.Web.Script.Serialization.JavaScriptSerializer();//申明一个用于序列化的对象。
+		 var alinifo = s.Deserialize<global::QuiryCityGroupRequest.AirLineInfo>(s.Serialize(new AirLineInfo() { DesCity_3Code = c.DesCity_3Code, OrgCity_3Code = c.OrgCity_3Code }));
+		/*属于上面的注释：语法格式-->s.Desericlize<需要的类型>(s.Serialize(待转换的类型))*/
+
+================
+ReferenceEquals()，两个引用的是同一个实例，那么两个引用是同一的。
+Equals(),两个对象要相等，条件是他们中的标识数据要相等。
+为了避免在不恰当的时间执行垃圾回收，System.GC对象包含了一个Collect()方法。你可以在执行一些关键代码之前调用它(这些代码执行的时候，不希望GC运行)
+终结器：允许程序员编写代码清理一个类的资源。
+	class Temporary
+	{
+		public Temporary() //无参数构造函数，在实例化无参数对象的时候调用。
+		{}
+		~Temporary()  //终结器
+		{}
+	}
+	
+============= C#本质论 泛型总结
+	泛型，在声明变量时创建用来处理特定类型的特殊数据结构。
+	例子：在一个类中重复一个接口的实现。
+	public interface IContainer<T>
+	{
+		ICollection<T> Items
+		{
+			get;set;
+		}
+	}
+	
+	public class Person:IContainer<Address>,IContainer<Phone>
+	{
+		ICollection<Address> IContainer<Address>.Items
+		{
+			get{.....}
+			set{.....}
+		}
+		
+		ICollection<Phone> IContainer<Phone>.Items
+		{
+			get{.....}
+			set{.....}
+		}
+	}
+	---------
+	default 运算符对任意数据类型的默认值进行动态编码。
+	泛型可以指定多个类型参数。
+	
+	
+	泛型约束：对泛型接收参数的一些特性进行限制。泛型类中声明的每一个类型参数提供一个可选的约束条件。 where
+	类型推断：类型推断想要成功，类型必须与方法签名匹配。
+	
+	5种不同的泛型约束
+	1. 值类约束：要求泛型参数必须是值类型，例如int,short或自定义的struct
+	public class MyClass<T>
+				where T:struct
+				{}
+				
+	2.引用类型约束：要求泛型阐述必须是引用类型。例如string,object 和自定义class
+	public class MyClass<T>
+				where T:class //这个泛型类只接受引用类型的泛型参数。
+				{}
+				
+	3.构造函数约束：要求泛型参数必须有构造函数
+	public class MyClass<T>
+				where T:new()
+				{}
+			只有这样泛型类型  T item = new T()；这样的操作才能够成功
+			
+	4.接口约束：要求泛型参数必须实现某个接口
+	public class MyClass<T>
+				where T:System.IComparable
+				{}
+			类型的访问范围，由接口约束
+			
+	5.基类约束：要求泛型参数必须继承某个基类
+	public class MyClass<T>
+				where T:Customer
+				{}
+			
+	----------泛型方法中的转型。
+	下面这个方法展示如何将一个Stream类型转换为object类型，然后把该object转换成为相应的类型。
+	public static T Deserialize<T>(Stream stream , IFormatter formatter)
+	{
+		return (T)formatter.Deserialize(stream);//formatter.Deserialize(stream);将Stream转换为object类型。然后隐式转换为外部指定的类型。
+	}
+	
+===========C#本质论 委托和Lambda表达式
+	委托三部曲：定义委托，实例化委托，绑定方法。
+	lambda表达式为“以内嵌方式声明的委托”模式提供了一个对应的C#语言构造。
+	lambda表达式（包括参数）的外部声明，在lambda表达式的内部访问的局部变量称为该lambda表达式的外部变量。this是一个外部变量。
+	
+	
+	
+	
+	
+============C#本质论 合式类型：
+	C# 的一个方法是一个已命名的代码块，能完成特定的功能。
+	重写Object成员
+	1. 重写ToString() ，默认每一个类都会有一个系统实现的ToString()方法，如果需要按照需求返回这在类中需要重写ToString()方法。
+	2. 重写GetHashCode()。无论如何想要重写Equals()的时候就应该重写GetHasCode()。
+	相等的对象必须要有相等的HashCode。a.Equal(b)者a.GetHashCode()==b.GetHashCode()
+	GetHashCode()必须返回一个值。
+	GetHashCode()通常在Equals()实现中用于“短路”一次性完整的相等比较，（假如HashCode值不同，就没有必要进行完整性相等比较了。）
+	3.重写Equals()
+	对象同一性和相等的对象值。如果两个引用引用了同一个实例，那么这两个引用是同一的。（ReferenceEquals()）
+	运算符重载
+	引用其他程序集
+	默认情况没有任何访问修饰符的类会被定义成internal。结果是该类无法重程序集的外部访问。
+
+		
+
+==============实现页面自动点击事件。
+ 方法一：webBrowser1.Document.All[i].InvokeMember("click");
+
+ 方法二：
+	private void button2_Click(object sender, EventArgs e)
+	{
+		webBrowser1.ScriptErrorsSuppressed = true;
+		webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted1);
+		webBrowser1.Navigate("http://www.测试.com/generate.aspx"); //打开目标URL
+	}
+
+	private void webBrowser1_DocumentCompleted1(object sender, WebBrowserDocumentCompletedEventArgs e)
+	{
+		if (e.Url != webBrowser1.Document.Url) return;
+		HtmlDocument doc = webBrowser1.Document; //获取document对象
+		HtmlElement btn = null;
+		foreach (HtmlElement em in doc.All) //轮循
+		{
+			string str = em.Name;
+			if ((str == "submit")) //减少处理
+			{
+				btn = em;
+				break; //获取submit按钮
+
+			}
+		}
+		if (btn != null)
+			btn.InvokeMember("click"); //触发submit事件
+	}
+	
+================实现系统计时器功能。
+
+	private void Handel()
+	{
+		Timer time = new Timer();
+		int intTime = 1000;
+		time.Interval = intTime;
+		time.Elapsed += new System.Timers.ElapsedEventHandler(timer_Elapsed); //为定时器绑定调用方法。
+		time.AutoReset = true ;  //
+		time.Enabled = false; //设置定时器是否有效。是否执行System.Timers.Timer.Elapsed事件；
+		time.Start();  //打开定时器。
+	}
+
+	private void timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e) //定时器调用方法。
+	{ 
+		count++;
+		log.LogMessage(string.Format("{0}",count));
+	}
+	
+================页面提醒
+ private void ClientAlert(string message)
+    {
+        ClientScript.RegisterClientScriptBlock(
+            this.GetType(),
+            "ScalScript",
+            string.Format("<script type='text/javascript'>alert('{0}')</script>", Server.HtmlEncode(message)));
+    }
+	
+================NET,的网络编程
+	Ping ping = new Ping();
+	ping.SendAsync(IPAddress,Int32,Object) //尝试异步方式向指定的IPAddress的计算机发送Internet控制消息协议(ICMP)会送消息，并从该计算机接收相应的ICMP会送答复消息。
+	-------通过IP获得主机名称等相关信息。
+	IPHostEntry hostEntry = Dns.GetHostEntry(address);  //Dns.GetHostEntry(IPAddress address)
+	
+========================关于IIS发布问题。
+	在IIS中发布系统至少需要删除发布文件中的bin文件。不能合并发布系统中的bin文件。
+	IIS内部访问机制，当服务器接收Request之后，会访问bin文件中编译好的文件，再根据bin文件内容去访问相应页面。
+	
+======================关于如何发布服务的问题。
+	1.使用C#编写windows服务，首先建立一个Windows服务的工程。
+	2.在windows服务中只应该包含该服务所要引用的数据。
+	***3.windows服务部署，不需要单独配置App.config文件。在新建一个需要执行的文件里面只需要一个安装文件和一个卸载文件。文件需要的配置文件已经在文件的xxx.exe.config文件中。
+	
+======================非页面层（类中）使用Session
+	HttpContext.Current.Session[""]=xxxx;//可以把数据存放入Session中了。
+	
+	
+	
+	
+	
+
+========================Visual studio 快捷键
+自动using命名空间（快捷键Ctrl + .）
+按住Alt，可以矩形的方式选取代码
+ 自动完成属性-->我们要做的只是Tab、修改
+ 
+ 
+
+ 
+========================NHibernate 使用以及学习
+	NHibernate主要是面向解决数据如何存储。
+	对象化查询，可以避免写Sql语句的时候出错。在编译器就可以发现错误。hibernate关注的是对象，而写sql是面向关系的。用它就更加OO了。
+	小提示：我们要为Microsoft Visual Studio 2008添加编写NHibernate配置文件智能提示的功能。只要在下载的NHibernate里找到configuration.xsd和nhibernate-mapping.xsd两个文件并复制到X:\Program Files\Microsoft Visual Studio 9.0\Xml\Schemas目录即可。
+1.NHibernate 配置问题。
+	建立数据库表-----编写持久化类-----编写映射文件
+	NHibernate默认使用代理功能，而且其公共方法、属性和事件声明为virtual.类中字段设置为virtual.
+	***编写映射文件需要把这个默认文件属性修改为“嵌入的资源”,因为NHibernate是通过查找程序集中的文件映射实体。
+	***配置NHibernate需要把默认文件属性“复制到输出目录”修改为"始终复制"，否者会报找不到文件。
+2.书写HQL参数有四种写法与之对比：
+	public IList<Customer> GetCustomersByFirstname(string firstname)
+	{
+		//写法1
+		//return _session.CreateQuery("from Customer c where c.Firstname='" + firstname + "'")
+		//    .List<Customer>();
+
+		//写法2:位置型参数
+		//return _session.CreateQuery("from Customer c where c.Firstname=?")
+		//    .SetString(0, firstname)
+		//    .List<Customer>();
+
+		//写法3:命名型参数(推荐)
+		return _session.CreateQuery("from Customer c where c.Firstname=:fn")
+			.SetString("fn", firstname)
+			.List<Customer>();
+	}
+	写法1：可能会引起SQL注入，不要使用
+	写法2：ADO.NET风格的？参数，NHibernate的参数从0开始计数。
+	写法3：命名参数用:name的形式查询字符串表示，这时IQuery接口把实际参数绑定到命名参数。
+	写法4：命名的参数列表，把一些参数添加到一个集合列表中的形式，比如可以查询数据是否在这个集合列表中。
+	使用命名参数有一些好处：命名参数不依赖于它们在查询字符串中出现的顺序；在同一个查询中可以使用多次；它们的可读性好。所以在书写HQL使用参数的时候推荐命名型参数形式。
+
+3.Criteria Query 条件查询。
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+
+
+

@@ -1,0 +1,32 @@
+线程是程序中的一个执行流。不同的线程可以执行同样的函数。
+多线程指程序中包含多个执行流，单个程序可以创建多个并行执行的线程完成各自任务。
+线程不利方面：
+	内存占用，多线程需要协调和管理，所以需要CPU时间跟踪线程。线程对共享资源的访问相互影响，解决竞用共享资源的问题。线程太多，控制太复杂。
+Thread类有几个关键方法：
+	Start():启动线程；
+	Sleep(int):静态方法，暂停当前线程指定的毫秒数；
+	Abort():终止一个线程；
+	Suspend():不终止线程，仅仅挂起线程，该线程可以恢复。
+	Resume():恢复被Suspend()挂起的线程
+	Join():使主线程等待，直到某一线程执行结束
+当Abort()方法终止了线程，该线程无法被恢复。
+一个线程是在Running状态下调用Start()方法
+主线程Mian()函数：所有的线程都是依附在Main()函数所在的线程。起始线程可以称为主线程。只有所有线程都终止那么主线程才能终止。
+ThreadState 属性的取值如下：
+	Aborted：线程已停止；
+	AbortRequested：线程的Thread.Abort()方法已被调用，但是线程还未停止；
+	Background：线程在后台执行，与属性Thread.IsBackground有关；
+	Running：线程正在正常运行；
+	Stopped：线程已经被停止；
+	StopRequested：线程正在被要求停止；
+	Suspended：线程已经被挂起（此状态下，可以通过调用Resume()方法重新运行）；
+	SuspendRequested：线程正在要求被挂起，但是未来得及响应；
+	Unstarted：未调用Thread.Start()开始线程的运行；
+	WaitSleepJoin：线程因为调用了Wait(),Sleep()或Join()等方法处于封锁状态；
+线程优先级：线程5个优先级，Hightest、AboveNormal、Normal、BelowNormal、Lowest
+	为一个线程指定优先级通过myThread.Priority=ThreadPriority.Lowest
+生产者和消费者：
+	避免几个线程同时执行一个函数，造成的数据混乱
+	lock关键字。一个时间内值允许一个线程进行执行，其他线程必须等待。lock(expression) statement_block
+	expression代表你希望跟踪的对象，通常是对象引用。
+		如果你想保护一个类的实例，一般地，你可以使用this；		如果你想保护一个静态变量（如互斥代码段在一个静态方法内部），一般使用类名就可以了。

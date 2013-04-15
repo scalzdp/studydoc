@@ -1,0 +1,145 @@
+为了实现弹出层，而且弹出层里面的数据是从数据库出来的。
+1.做一个开始是一个隐藏的控件 例如Datagrid控件
+2.在页面进入或其他触发事件上为DataGrid控件添加数据。
+3.点击DataGrid把点击的一行赋值到页面控件函数。
+4.在使用javaScript为这个DataGrid实现显示。
+例如有免票系统，选择亲友功能：
+	第一步：页面上隐藏了一个DataGrid控件，
+	<asp:DataGrid runat="server" ID="dgRelative" AutoGenerateColumns="false" ShowHeader="false" OnItemDataBound="dgRelative_ItemDataBound">
+<ItemStyle CssClass="Row0" HorizontalAlign="Center"  BorderWidth="0"></ItemStyle>
+                    <AlternatingItemStyle CssClass="Row1"></AlternatingItemStyle>
+<Columns>
+<asp:BoundColumn ItemStyle-Width="80"></asp:BoundColumn>
+<asp:BoundColumn ItemStyle-Width="120"></asp:BoundColumn>
+<asp:BoundColumn Visible="false"></asp:BoundColumn>
+</Columns>
+</asp:DataGrid>
+第二步：对这个DataGrid绑定数据
+    protected void dgRelative_ItemDataBound(object sender, DataGridItemEventArgs e)
+    {
+        if (e.Item.ItemIndex == -1) return;
+        if ((e.Item.ItemIndex % 2) == 0)
+        {
+            e.Item.Attributes.Add("onmouseout", "this.className='Row0'");
+        }
+        else
+        {
+            e.Item.Attributes.Add("onmouseout", "this.className='Row1'");
+        }
+        e.Item.Attributes.Add("onmouseover", "this.className='RowSelect'");
+
+        //绑定数据
+        CEwtRelative cRelative = (CEwtRelative)e.Item.DataItem;
+        e.Item.Cells[0].Text = cRelative.Name;
+        e.Item.Cells[1].Text = cRelative.Relationship;
+        e.Item.Cells[2].Text = "证件号码：" + cRelative.IDCard.ToString();
+        //添加表格单击选定事件
+        string usedName = "";
+        e.Item.Attributes.Add("onclick", "RelativeSelected('" + txtName.ClientID + "','" + cRelative.Name + "','" + cRelative.IDCard + "','" + cRelative.IDType +
+            "','" + cRelative.ID.ToString() + "','" + usedName + "');");
+    }
+	
+	第三步：javascript对页面控件进行赋值。
+	//前台button的onclick事件
+	<input type="button" id="btnRelative" runat="server"  onclick="SelectRelative(this);return false;" class="button" value="选择亲友" />
+	//为这个button的SelectRelative事件的实现。
+	    function SelectRelative(o)
+    {
+        var btn=o;
+        var id=btn.id;
+        id = id.substring(0,(id.lastIndexOf("_")+1));
+        var divRe = document.getElementById(id+"divRelative");
+        if(divRe.style.display=='')
+        {
+            divRe.style.display="none";
+            return;
+        }
+        divRe.style.display='';
+        btnTop=btn.offsetTop;
+        btnLeft=btn.offsetLeft;
+        btnHeight=btn.clientHeight;
+        btnWidth=btn.clientWidth;
+        while (btn = btn.offsetParent){btnTop+=btn.offsetTop; btnLeft+=btn.offsetLeft;}
+        divRe.style.left=btnLeft;
+        divRe.style.top=btnTop+btnHeight+6;
+    }
+	第四步，对于点击某一行事件对页面控件赋值
+	 function RelativeSelected(id, name , card,type,relativeID,usedName)
+    {
+        var tbName=document.getElementById(id);
+        if (usedName!="")
+        {
+            name=usedName;
+            tbName.readOnly=false;
+        }
+        else tbName.readOnly=true;
+        tbName.value=name;
+        id = id.substring(0,(id.lastIndexOf("_")+1));
+        var divRe = document.getElementById(id+"divRelative");
+        divRe.style.display="none";
+        var tbIDCard=document.getElementById(id+"txtIDCard");
+        tbIDCard.value=card;
+        var ddlType=document.getElementById(id+"ddlIDType");
+        for(var i=0;i<ddlType.length;i++)
+        {
+            if(ddlType[i].value==type)
+            {
+                ddlType[i].selected=true;
+            }
+            else ddlType[i].selected=false;
+        }
+        //初始化年龄
+        var year,month;
+        var now=new Date();
+        if(card.length==15)
+        {
+            year="19"+card.substring(6,8);
+            month=card.substring(8,10);
+        }
+        else if(card.length==18)
+        {
+            year = card.substring(6,10);
+            month = card.substring(10,12);
+        }
+        else return;
+        var age = now.getFullYear() - year;
+        if ( now.getMonth()+1<month)
+        {
+            age=age-1;
+        }
+        document.getElementById(id+"txtAge").value=age.toString();
+        //如果选择的亲友是儿童，将旅客类型选为“儿童”，否则，显示为成人
+        
+        var ddlPsgType = document.getElementById(id + "ddlPsgType");
+        var divAge = document.getElementById(id+"divAge");
+        if(age<13)
+        {
+            for (i=0;i< ddlPsgType.options.length;i++)
+            {
+               if(ddlPsgType.options[i].value == "1")
+               {
+                   ddlPsgType.options[i].selected=true;
+               }
+            }
+            divAge.style.display="";
+        }
+        else
+        {
+            for (i=0;i< ddlPsgType.options.length;i++)
+            {
+               if(ddlPsgType.options[i].value == "2")
+               {
+                   ddlPsgType.options[i].selected=true;
+               }
+            }
+            divAge.style.display="none";
+        }
+        
+//        document.getElementById(id+"hfRelativeID").value=relativeID;//亲友ID编号
+//        var hf2=document.getElementById("hf"+relativeID);
+//        if (hf2!=null)
+//        {
+//           hf2.value=tbName.id;
+//           tbName.readOnly=false;
+//        }
+    }

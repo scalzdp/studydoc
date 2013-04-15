@@ -1,0 +1,152 @@
+1.数据库中写好了数据库分页程序。SQL存储过程
+set ANSI_NULLS ON
+set QUOTED_IDENTIFIER ON
+go
+
+ALTER PROCEDURE [dbo].[p_EwtRelative_ListJoinGuild]
+	@WhereClause varchar(2000) = NULL, --条件语句 
+	@OrderBy varchar(2000) = NULL, --排序语句
+	@PageSize INT = 0, -- 分页查询的每页数量，为0表示查询全部，不分页。
+	@PageNumber INT = 1, -- 分页查询的当前页号
+	@TotalSize INT OUTPUT, -- 返回值，查询结果记录条数
+	@TotalPage INT OUTPUT, -- 返回值，查询结果总页数
+	@EmpID varchar(20),
+	@CheckGuild varchar(10) = null
+AS
+BEGIN
+	SET NOCOUNT ON
+	-- 声明变量
+	DECLARE @Sql NVARCHAR(4000) -- 用于保存动态组织的sql语句
+	DECLARE @ParmDefinition NVARCHAR(500) -- 用于保存临时参数
+	DECLARE @MinRowIndex INT -- 分页查询的最小行号
+	DECLARE @MaxRowIndex INT -- 分页查询的最大行号
+	DECLARE @FieldsClause NVARCHAR(400) -- 查询的字段
+
+	-- 检查参数合法性，并设置为可用值
+	SET @FieldsClause = 't_EwtRelative.*,(case when (select count(1) from t_guildorgindex a inner join t_guildempindex b on a.guildid = b.guildid where b.empid = ' + @EmpID + ' and t_empbase.orgno like a.orgno +''%'')>0 then 1 else 0 end) as CheckGuild'
+	SET @WhereClause = LTRIM(RTRIM(ISNULL(@WhereClause,'')))
+	SET @OrderBy = LTRIM(RTRIM(ISNULL(@OrderBy,'')))
+	IF(@PageSize < 0) SET @PageSize = 0
+	IF(@PageNumber < 1) SET @PageNumber = 1
+
+	IF(@PageSize = 0) -- 为0表示不分页
+	BEGIN
+		-- 如果不分页
+		-- 组织查询语句
+		SET @Sql = N'
+		select ' + @FieldsClause + ' from [dbo].[t_EwtRelative] INNER JOIN
+                      t_EmpBase ON t_EwtRelative.EmpID = t_EmpBase.ID '
+		
+		-- 附加where子句
+		IF(@WhereClause <> '')
+		BEGIN
+		SET @Sql = @Sql + N'
+		where ' + @WhereClause
+		END
+		
+		-- 附加order子句
+		IF(@OrderBy <> '')
+		BEGIN
+		SET @Sql = @Sql + N'
+		order by ' + @OrderBy
+		END
+
+		SET @Sql = 'select * from (' + @Sql + ') tmp where checkguild in (' + @CheckGuild + ')'
+		
+		-- 执行语句
+		--print @Sql
+		EXEC(@Sql)
+	
+		-- 设置返回值
+		SET @TotalSize = @@ROWCOUNT
+		SET @TotalPage = 1
+	END
+	ELSE
+	BEGIN
+		-- 如果分页
+		
+		-- 检查：排序语句不能为空，建议至少使用主键做排序
+		IF(@OrderBy = '')
+		BEGIN
+			RAISERROR(N'请务必给参数@OrderBy输入有效的排序语句',15,1)
+			RETURN
+		END
+
+		-- 计算总条数
+		SET @Sql = N'
+		select (case when (select count(1) from t_guildorgindex a inner join t_guildempindex b on a.guildid = b.guildid where b.empid = '+@EmpID+' and t_empbase.orgno like a.orgno +''%'')>0 then 1 else 0 end) as CheckGuild from [dbo].[t_EwtRelative] INNER JOIN
+                      t_EmpBase ON t_EwtRelative.EmpID = t_EmpBase.ID '
+		
+		IF(@WhereClause <> '')
+		BEGIN
+		SET @Sql = @Sql + N'
+		where ' + @WhereClause
+		END
+
+		SET @Sql = 'select @RowCountOut=count(1) from (' + @Sql + ') tmp where checkguild in (' + @CheckGuild + ')'
+		
+		SET @ParmDefinition = N'
+		@RowCountOut int OUTPUT';
+		
+		EXECUTE sp_executesql @Sql,@ParmDefinition,@RowCountOut = @TotalSize OUTPUT
+		--print @TotalSize
+		--print @Sql
+		
+		-- 根据总记录条数，计算总页数
+		SET @TotalPage = CEILING(CAST(@TotalSize AS NUMERIC(10,2)) / @PageSize)
+		
+		-- 根据计算总页数，更正查询页数
+		IF(@PageNumber > @TotalPage) SET @PageNumber = @TotalPage
+
+		-- 计算最小、最大行号
+		SET @MinRowIndex = (@PageNumber - 1) * @PageSize + 1
+		SET @MaxRowIndex = @MinRowIndex + @PageSize - 1
+		
+
+		-- 组织查询语句
+		SET @Sql = N'
+		select * from (select top ' + cast(@MaxRowIndex AS NVARCHAR(10)) + ' *,ROW_NUMBER() OVER(ORDER BY ' + @OrderBy + ') AS RowNo from (
+			select ' + @FieldsClause
+		SET @Sql = @Sql + N'
+			from [dbo].[t_EwtRelative] INNER JOIN
+                      t_EmpBase ON t_EwtRelative.EmpID = t_EmpBase.ID '
+		
+		-- 附加where子句
+		IF(@WhereClause <> '')
+		BEGIN
+		SET @Sql = @Sql + N'
+			where ' + @WhereClause
+		END
+		
+		-- 附加行号范围子句
+		SET @Sql = @Sql + '
+		) tmp where checkguild in (' + @CheckGuild + '))tmp2 where RowNo between ' + cast(@MinRowIndex as nvarchar(10)) + ' and ' + cast(@MaxRowIndex as nvarchar(10))
+		
+		-- 执行语句
+		--print @Sql
+		EXEC(@Sql)
+	END
+END
+
+2.在代码中Datagrid中如何是现房分页呢？
+	第一步：封装一个数据绑定函数BindGrid()
+	private void BindGrid1()
+        {
+            int EMPID = Convert.ToInt32( ViewState["empid"].ToString()); //存入待查询的值
+            List<CEwtRelative> cc = CEwtRelativeBLL.LoadCollection("[EmpID]=" + EMPID + "", "[Relationship]", dgRelativeInfo.PageSize, dgRelativeInfo.CurrentPageIndex + 1,out totalSize, out totalPage);//调用查询LoadCollection方法查询出来符合条件的集合传出totalSize和totalPage
+                    //传到页面控件里面进行显示
+             dgRelativeInfo.VirtualItemCount = totalSize;
+             if (dgRelativeInfo.CurrentPageIndex + 1 > totalPage && totalPage > 0)//实现数据分页功能
+             {
+                  dgRelativeInfo.CurrentPageIndex--;
+            }
+            dgRelativeInfo.DataSource = cc;//数据绑定
+            dgRelativeInfo.DataBind();
+        }
+		
+	第二步：	
+		protected void dgRelativeInfo_PageIndexChanged(object source, DataGridPageChangedEventArgs e) //数据库分页函数，点击不同的页码查询不同的结果。
+        {
+            dgRelativeInfo.CurrentPageIndex = e.NewPageIndex;
+            BindGrid1();
+        }

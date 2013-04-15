@@ -1,0 +1,233 @@
+============sql基本语法
+INNER JOIN在表中存在至少一个匹配时，INNER JOIN关键字返回行。
+SELECT column_name(s)     --查询的列名，INNER JOIN适用于多表联合查询
+FROM table_name1          
+INNER JOIN table_name2 
+ON table_name1.column_name=table_name2.column_name
+---------------
+数据库"字符串"计数，是从1开始
+substring(convert(varchar(20),t_AsynLog.CreateDate,121),12,2) as TimeSpan --从数据库中取出小时，24时,并把这一列命名为TimeSpan
+--方法，把t_AsynLog.CreateDate转换（convert）为varchar(20)，然后取substring，数据截断
+		-----使用substring 这样函数聚合函数，需要使用group by 
+group by --根据查询出来的数据来分组
+
+---------------2012/8/6
+CAST()函数的参数是一个表达式
+	CAST('12' AS int)   --把字符串'12'转换成为整形类型。
+	CAST('12.5' AS decimal(9,2))  //把自定字段数据转换成为decimal类型,精度为9小数点两位。
+ATAN(float_expression) ,返回正切是FLOAT值的以弧度表示得交。
+EXP(float_expression)  ,返回表达式的指数值。
+LOG(float_expression) ,返回表达式自然数对数值。
+LOG10(float_expression) ,返回表达式的以10为底的对数值。
+SQRT(float_expression)  ,返回表达式的平方根
+--------取近似值函数。
+CEILING(numeric_expression)  ,返回>=表达式的最小整数，返回的数据类型与表达式相同。可为INTERGER，MONEY，REAL，FLOAT。
+FLOOR(numeric_expression)  ,返回<=表达式的最小整数，返回的数据类型与表达式相同。可为INTERGER，MONEY，REAL，FLOAT。
+ROUND(numeric_expression,integer_expression)  ,返回以integer_expression为精度的四舍五入值，返回的数据与表达式类型相同，可为INTERGER，MONEY，REAL，FLOAT。
+ROUND(CAST(count(1)AS DOUBLE)/60 ,2)  ---sql语句取相对数据的小数两位
+ 
+
+
+=========SqlServer划分文件组
+目的：例如需要把日志数据文件和业务数据文件 存放到不同的两个数据文件中。
+	1. 数据库/属性/文件组-----在里面添加两个文件组，BusData业务数据，LogData日志数据
+	2. 数据库/属性/文件----建立两个文件一个BusData数据，一个LogData数据
+	3. 表/设计/属性/常规数据空间范围/文件组或分区方案名称----选择需要存放的文件中
+=========程序里面自动，创建数据表
+
+
+=========Sql 临时表使用
+select * into #temp from t_SentTaskDetail  --查询出来的数据放入临时表#temp中
+
+select * from #temp                        --从临时表中查询数据
+
+drop table #temp                           --删除临时表
+
+truncate table 表名                        --清空表
+
+
+==========SQL server Analysis Services 使用
+1. 建立Analysis Services 工程，
+2. 添加数据源
+3. 建立 命令查询语句
+4. 建立 “维度”，可以建立多个维度
+5. 建立 “多维数据集”
+
+==========数据库设计方案。
+考虑方面： 
+	一方面，考虑数据的易维护性。
+	另一方面，考虑业务的快速扩展性。
+	3. 数据库分区方便性。(尽量把数据库中占用大的字段拆分到不同的数据表中，SQLServer数据库方便给表级分区)
+	4. 数据库性能(数据量、字段复杂性)(字段复杂:分解字段，存入不同表中，实现查询、插入、分区的方便性。)
+网上观点： 
+	1，业务类型需按照业务实现方式从大方面进行整合和分类，如可分为定制推送类业务，
+	聊天交友转发类业务，行业应用类业务，游戏类业务等等。建议不同类型的业务大种类可单独建库，
+	相对独立。（新闻和交友业务的处理逻辑已大相径庭，宜分开处理） 
+	
+	2，同一种业务下，尤其象新闻类业务，处理逻辑完全相同，在数据量可承受的范围下，
+	可将下发内容全放一个表中，按群组分类管理，同时也要结合短信接口，考虑不同群组业务的业务代码和资费定价情况。
+-----------	20120802 彩信数据库，设计心得。
+
+	彩信数据库，对于彩信内容非常的大，存入数据库一张表对数据库不易维护。修改意见：
+	1. 把彩信对象进行细分，分为彩信头，图片，文字等。
+	实战解说：
+	公司彩信，采用促销批量发送彩信。并需要提供对短信内容，短信图片支持查询。
+	经分析，在彩信中彩信图片彩信文字在将来会占用大量的数据库空间。SQLServer支持数据库分区考虑将短信内容分为多帧(Items)，Item-->Img（图片数据表），Item-->Text（文字数据表）。每一个Item包含图片和文字。
+	更具Item的一个序列字段就可以得知每一个Item中的图片和文字的先后顺序。
+	
+-----------数据库设计
+	ER图-->实体关系图；简记E-R图是指以实体、关系、属性三个基本概念概括数据的基本结构，从而描述静态数据结构的概念模式。
+	E-R图也称实体-联系图.提供了表示实体类型、属性和联系的方法，用来描述现实世界的概念模型
+	逻辑设计主要是将E-R图模型转换为某一特定的DBMS能够接受的逻辑模式。对关系数据库，主要是完成标的结构和关系的设计。
+	实体之间的联系要视联系的种类而定，具体规则如下：
+		(1)E-R每一个一对一的联系（1:1）可以单独转换为一个表，也可与任意任意一端实体对应的表合并。
+		(2)E—R模型图中一对多的联系(1：n)通常不单独转换为一个表，而将“一”方实体的关键字加人“多"方实体对应的表中作为外键，同时把联系的属性也一并加入“多"方实体对应的表中o 
+		(3)E—R模型图中每个多对多(m：n)的联系要单独转换为一个表，表中的字段将包含联系的实体的主键和联系本身具备的属性，并用相联系的实体双方的主键组合起来作联系表的主键。
+		例如，选课是学生和课程之间的多对多(m：n)联系，转换后的表包含学生的主键“学号”和课程的主键“课程号”，以及选课本身的属性“成绩"，并以“学号”和“课程号”组合起来作主键。
+	
+	
+	
+	
+------------20120814 SQLServer 游标使用
+declare @id int  --申明局部变量
+declare cur CURSOR for  --固定格式，定义游标
+select top 10 id from t_agreement  --查询top 10 中的id
+open cur      --打开游标
+fetch next from cur into @id  --放入第一条数据
+while (@@FETCH_STATUS = 0)  --循环直到 @@FETCH_STATUS = 0 的退出。
+begin 
+select @id  --上面声明数据
+  --TODO:这里面可以对数据进行逻辑处理
+fetch next from cur into @id  --放入下一条数据
+end
+close cur
+deallocate cur
+
+--------------when case 使用
+select SourceTypeID,case when SourceTypeID >5 then count(1) else -1 end from t_agreement group by SourceTypeID
+
+---------------Sql Server 影响性能的主要原因总结
+1. 程序多次链接数据库，导致在链接的时候消耗大量的时间。
+2. 大量数据Load进入数据库，导致内存占用率非常高。
+3. 多表不必要的链接操作，导致查询很慢。
+4. 使用不必要的 select * from table where id  in (****)   使用了不必要的in操作。 
+5. 数据未分区保存。
+6. 单表数据量太大，而且单表复杂。
+
+-----------------sql server 建立任务
+http://blog.csdn.net/jxsdpengbin/article/details/7936223
+
+==================SqlServer四个高级特性
+	参考网站：http://blog.csdn.net/yzsind/article/details/8719594
+	一、Index Building Filter(索引创建时过滤)
+	例如，有一些索引非常低效，比如经常查询状态为进行中的订单，订单中有99%的状态是完成，1%是进行中，因此建立订单状态字段建立索引降低了效率，浪费了控件。
+	create index idx_3 on order(status) where status=’running’
+	二、Index Include Column(索引包含列)
+		1.通过组合索引可以提高索引过滤度
+		2.索引覆盖读取
+	三、聚集索引(Cluster Index)
+	四、VIEW INDEX(视图索引)
+	
+	
+
+
+-------------------oracle 数据库。
+存储过程
+
+
+
+
+select * from dbo.t_SalaryDetailAmount where dbo.t_SalaryDetailAmount.BaseID in (select id from t_SalaryBase )  
+and dbo.t_SalaryDetailAmount.FieldID in (select id from t_SaralyField)
+
+select * from dbo.t_SalaryDetailText where dbo.t_SalaryDetailText.BaseID in (select id from t_SalaryBase )  
+and dbo.t_SalaryDetailText.FieldID in (select id from t_SaralyField)
+
+select dbo.t_SalaryDetailAmount.Value,dbo.t_SalaryDetailAmount.BaseID from dbo.t_SalaryDetailAmount where dbo.t_SalaryDetailAmount.BaseID in (select id from t_SalaryBase )  
+and dbo.t_SalaryDetailAmount.FieldID in (select id from t_SaralyField) group by dbo.t_SalaryDetailAmount.BaseID,dbo.t_SalaryDetailAmount.Value
+
+select * from dbo.t_SalaryDetailText where dbo.t_SalaryDetailText.BaseID in (select id from t_SalaryBase )  
+and dbo.t_SalaryDetailText.FieldID in (select id from t_SaralyField)
+
+select *
+from dbo.t_SalaryDetailAmount where dbo.t_SalaryDetailAmount.BaseID in (select id from t_SalaryBase )  
+and dbo.t_SalaryDetailAmount.FieldID in (select id from t_SaralyField) 
+
+select BaseID
+--,SUM(case when FieldID=1 THEN (select FieldCHName from dbo.t_SaralyField where ID = FieldID) END) as FieldID1
+
+from dbo.t_SalaryDetailAmount where dbo.t_SalaryDetailAmount.BaseID in (select id from t_SalaryBase )  
+and dbo.t_SalaryDetailAmount.FieldID in (select id from t_SaralyField) group by BaseID
+cast(FieldID as nvarchar(50))
+
+declare @sql varchar(8000)
+set @sql = 'select BaseID'
+select @sql = @sql +',
+max(case '''+cast(FieldID as nvarchar(50))+''' when FieldID = '''+ cast(FieldID as nvarchar(50)) +''' and  BaseID = '''+ cast(BaseID as nvarchar(50)) +'''then Value else 0 end) as select dbo.t_SaralyField.FieldCHName from t_SaralyField where id ='+cast(FieldID as nvarchar(50))+''
+from(select * from dbo.t_SalaryDetailAmount where dbo.t_SalaryDetailAmount.BaseID in (select id from t_SalaryBase )  
+and dbo.t_SalaryDetailAmount.FieldID in (select id from t_SaralyField))as tmp
+
+set @sql = @sql+'from tmp group by BaseID'
+
+print @sql
+
+exec(@sql)
+
+(select * into #temp from dbo.t_SalaryDetailAmount where dbo.t_SalaryDetailAmount.BaseID in (select id from t_SalaryBase )  
+and dbo.t_SalaryDetailAmount.FieldID in (select id from t_SaralyField))
+
+select * from #temp
+
+declare @SQL varchar(1000)
+declare @Header varchar(200)
+set @Header = (select dbo.t_SaralyField.FieldCHName from t_SaralyField where id =1)
+--select @Header
+set @SQL = 'select BaseID,
+max(case when FieldID = ''1'' and  BaseID = ''1''  then Value else 0 end) as '+ @Header 
++' from #temp group by BaseID'
+PRINT @SQL
+exec(@SQL)
+
+declare @SQL varchar(1000)
+set @SQL = 'select * from #temp'
+exec(@SQL)
+
+select * from t_SalaryDetailAmount
+update t_SalaryDetailAmount set value=1000 where id =7
+
+select * from #temp
+
+select BaseID,
+max(case  when FieldID = '1' and  BaseID = '1' then Value else 0 end) as 'aaa',
+max(case  when FieldID = '2' and  BaseID = '1' then Value else 0 end) as 'bbb',
+max(case  when FieldID = '3' and  BaseID = '1' then Value else 0 end) as 'vvv',
+max(case  when FieldID = '3' and  BaseID = '2' then Value else 0 end) as 'vvv',
+max(case  when FieldID = '1' and  BaseID = '2' then Value else 0 end) as 'aaa',
+max(case  when FieldID = '2' and  BaseID = '2' then Value else 0 end) as 'bbb'
+from #temp group by BaseID
+select 
+
+
+drop table #temp
+
+
+select * from dbo.t_SalaryDetailAmount 
+where dbo.t_SalaryDetailAmount.BaseID in (select id from t_SalaryBase)  
+and dbo.t_SalaryDetailAmount.FieldID in (select id from t_SaralyField) 
+PIVOT(COUNT(BaseID) for BaseID in ([1],[2],[3])) AS P
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+

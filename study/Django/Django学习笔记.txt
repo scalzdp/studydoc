@@ -1,0 +1,51 @@
+Application 模块
+1.Admin 放在APP/admin.py文件中 --管理数据(后台管理，创建的对象注册到后台管理程序中)
+
+2.上下文处理器，放在APP/context_processors.py文件中
+
+3.内容源，放在APP/feeds.py文件中
+
+4.表单，放在APP/forms.py文件中
+
+5.Managers，放在APP/managers.py文件中
+
+6.中间件，放在APP/middleware.py文件中，实现尽可能少的任务
+
+7.模型，放在APP/models(.py文件中或目录下) 遵循Django‘s模型约定。 ---models.py文件主要用一个Python类描述数据表。这个类，可以通过简单地Python代码创建、检索、更新、删除数据库中的记录无需写很多的SQL语句
+
+8.模板，放在APP/templates/APP/template.html文件中----*.html是html模板，它描述了这个页面的设计是如何实现的，使用带基本逻辑声明的模板语言{%....%}
+
+9.通常情况下使用一下区块名称{%block title%}这个区块用来定义页面的标题，你的base.html模板很可能要在这个tag之外定义站点名字，以便能够放在所有页面中。
+
+10.{%block extra_head%}，页面经常需要在HTML文档头添加的信息。比如RSS源，Javascript,CSS,以及别的应该放在文档头的信息。你也可以定义另外的专门的区块来添加文档头的其他部分的信息。
+	10.1还有结束标签(模块是成对出现)--子模块的实现，重载了父模板{%block extra_head%}
+
+11.{%block body%}，这个tag用来包含页面的整个body部分，在app中创建的页面能够替换整个页面内容，不仅仅是正文内容。尽可能是tag名字和HTML标签名称保持一致。
+
+12.{%block menu%}，菜单(导航栏)应该包含在这个区块中。针对站点级的导航，不是每个页面专属的盗汗菜单。
+
+13.{%block content%}，用于放置正文内容。不包含任何属于base模板的东西。
+
+其他可能的区块：
+
+14.{%block content_title%}，指定content区块的“title”。比如blog的标题。也可以用来包含content内的导航
+
+15.{%block header%}{%block footer%}，页面可能修改的文本区域的页面和页脚
+
+16.{%block body_id%}{%block body_class%},设置HTML文档都得有标签的class或id属性，在设置样式或其他属性时非常有用
+
+17.{%block [section]_menu%}{%block page_menu%}，对应之前的menu区块，用来导航一个章节或页面。
+------------------------------
+18.模板标签，放在APP/templatetags/APP_tags.py文件中。
+	18.1*.html是html模板，它描述了这个页面的设计是如何实现的，使用带几本逻辑声明的模板语言{%....%}
+
+19.测试，放在APP/tests(.py文件或目录)中
+
+20.URLs，放在APP/urls(.py文件或目录)中。需要设置name属性以便能够反差；name属性设置成APP_MODEL_VIEW的格式，比如 blog_post_detail或blog_post_list ---(请求的函数到对应请求函数的映射)  -----指出了什么样的URL调用什么样的视图。
+
+21.view视图，放在APP/views(.py文件或目录)中，可以是任何可调用的python函数，视图参数应提供合理的缺省值，并易于定制；---(处理请求，处理业务数据，调用模型方法，返回相应，页面跳转)----包含了页面的业务逻辑.
+
+2012/2/7
+MVC主要包含上面几点7，8，20，21
+这种设计模式关键的优势在于各种组件都是松散结合，每个由Django驱动的Web应用都有着明确的目的，可独立更改而不影响到其他的部分。
+
